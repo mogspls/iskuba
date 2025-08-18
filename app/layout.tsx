@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 // import { Geist, Geist_Mono } from "next/font/google";
-import Header from "~/components/Header";
-import Iskuba from "~/components/Iskuba";
+import Header from "@/components/Header";
+import Iskuba from "@/components/Iskuba";
 import "./globals.css";
+import { DrawerProvider } from "@/hooks/useDrawer";
 
 
 export const metadata: Metadata = {
@@ -17,12 +18,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`antialiased`}
-      >
-        <Iskuba/>
-        <Header/>
-        {children}
+      <body className={`antialiased`}>
+        <Iskuba />
+        <Header />
+        <DrawerProvider>
+          {children}
+        </DrawerProvider>
       </body>
     </html>
   );

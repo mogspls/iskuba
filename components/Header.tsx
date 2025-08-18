@@ -1,8 +1,9 @@
 "use client";
 import { useEffect, useState } from "react"
 
-import { useMediaQuery } from "~/hooks/useMediaQuery";
-import { Drawer, DrawerClose, DrawerTrigger, DrawerContent, DrawerDescription, DrawerTitle, DrawerHeader } from "~/components/ui/drawer";
+import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { Drawer, DrawerClose, DrawerTrigger, DrawerContent, DrawerDescription, DrawerTitle, DrawerHeader } from "@/components/ui/drawer";
+import { usePathname } from "next/navigation";
 
 export default function Header() {
 
@@ -13,41 +14,46 @@ export default function Header() {
   const isDesktop = useMediaQuery('(min-width: 48rem)');
 
   const pages = [
-    { name: "About", href: "/", children: [] },
-    { name: "Experience", href: "/experience", children: [] },
     {
-      name: "Certification",
-      href: "/certification",
-      children: [
-        {
-          name: "Scuba Diver",
-          href: "/certification/scuba-diver",
-        },
-        {
-          name: "Open Water Diver",
-          href: "/certification/open-water-diver",
-        },
-        {
-          name: "Advanced Open Water Diver",
-          href: "/certification/advanced-open-water-diver",
-        },
-        { name: "Rescue Diver", href: "/certification/rescue-diver" },
-        {
-          name: "Emergency First Response Response (EFR)",
-          href: "/certification/EFR",
-        },
-      ],
+      title: "About",
+      name: "About Us — ISKUBA Philippines",
+      href: "/about",
     },
-    { name: "News", href: "/news", children: [] },
-    { name: "Contact", href: "/contact", children: [] },
+    {
+      title: "Courses",
+      name: "Courses we offer— ISKUBA Philippines",
+      href: "#courses",
+    },
+    {
+      title: "Leisure Dives",
+      name: "Leisure Dives — ISKUBA Philippines",
+      href: "/leisure-dives",
+    },
+    {
+      title: "News",
+      name: "News & Updates — ISKUBA Philippines",
+      href: "/news",
+    },
+    {
+      title: "Contact Us",
+      name: "Contact Us — ISKUBA Philippines",
+      href: "/contact-us"
+    },
   ];
 
 
+  const pathname = usePathname();
+
   useEffect(() => {
+    const match = pages.find((p) => p.href === pathname);
+    if (match) {
+      document.title = match.name;
+    } else {
+      document.title = "ISKUBA Philippines";
+    }
     setTitle(document.title);
     setHasMounted(true);
   }, []);
-
 
   if(!hasMounted){
     // Render a minimal fallback that matches client markup before hydration
@@ -79,7 +85,7 @@ export default function Header() {
                 {pages.map((page, index) => {
                   return (
                     <li key={index}>
-                      <a href={page.href}>{page.name}</a>
+                      <a href={page.href}>{page.title}</a>
                     </li>
                   );
                 })}
@@ -125,7 +131,7 @@ export default function Header() {
                               href={page.href}
                               className="flex justify-between items-center py-3 px-4 hover:bg-black/15 rounded-md"
                             >
-                              <span>{page.name}</span>
+                              <span>{page.title}</span>
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"

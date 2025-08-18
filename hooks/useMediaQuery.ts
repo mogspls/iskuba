@@ -1,22 +1,15 @@
 // hooks/useMediaQuery.ts
-"use client"
+"use client";
 import { useEffect, useState } from "react";
 
-export function useMediaQuery(query: string): boolean {
-  const [matches, setMatches] = useState<boolean>(() => {
-    if (typeof window === "undefined") return false;
-    return window.matchMedia(query).matches;
-  });
-
+export function useMediaQuery(query: string, initial = false) {
+  const [matches, setMatches] = useState<boolean>(initial); // initial must match SSR path exactly
   useEffect(() => {
-    const mediaQuery = window.matchMedia(query);
-
-    const handleChange = () => setMatches(mediaQuery.matches);
-    handleChange(); // Update on mount
-
-    mediaQuery.addEventListener("change", handleChange);
-    return () => mediaQuery.removeEventListener("change", handleChange);
+    const m = window.matchMedia(query);
+    const onChange = () => setMatches(m.matches);
+    onChange();
+    m.addEventListener("change", onChange);
+    return () => m.removeEventListener("change", onChange);
   }, [query]);
-
   return matches;
 }
