@@ -22,7 +22,7 @@ export default function Header() {
     {
       title: "Courses",
       name: "Courses we offer— ISKUBA Philippines",
-      href: "#courses",
+      href: "/#courses",
     },
     {
       title: "Leisure Dives",
@@ -30,17 +30,11 @@ export default function Header() {
       href: "/leisure-dives",
     },
     {
-      title: "News",
-      name: "News & Updates — ISKUBA Philippines",
-      href: "/news",
-    },
-    {
       title: "Contact Us",
       name: "Contact Us — ISKUBA Philippines",
       href: "/contact-us"
     },
   ];
-
 
   const pathname = usePathname();
 
@@ -122,7 +116,7 @@ export default function Header() {
                   <DrawerHeader>
                     <DrawerTitle>{`${title}`}</DrawerTitle>
                   </DrawerHeader>
-                  <nav className="pb-12">
+                  <nav className="pb-24">
                     <ul className="flex flex-col">
                       {pages.map((page, index) => {
                         return (

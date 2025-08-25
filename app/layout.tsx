@@ -1,8 +1,15 @@
 import type { Metadata } from "next";
-// import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Exo_2 } from "next/font/google";
 import Header from "@/components/Header";
 import Iskuba from "@/components/Iskuba";
 import "./globals.css";
+
+// Initialize font
+const exo2 = Exo_2({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"], // choose the weights you need
+  display: "swap", // optional
+});
 
 export const metadata: Metadata = {
   title: "ISKUBA Philippines",
@@ -16,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`antialiased`}>
+      <body className={`${exo2.className} antialiased`}>
         <Iskuba />
         <Header />
         {children}

@@ -1,10 +1,10 @@
 export default function Iskuba() {
   return (
-    <>
-      <section className="border-b border-b-black/25 py-4">
+    <div className="border-b border-b-black/25 ">
+      <section className="py-4 px-2 max-w-screen-xl mx-auto">
         <div
           className="relative w-full max-w-screeen-lg mx-auto overflow-hidden"
-          style={{ paddingBottom: `${(288 / 1486) * 100}%` }}
+          style={{ paddingBottom: `${(288 / 1490) * 100}%` }}
         >
           <video
             autoPlay
@@ -15,7 +15,6 @@ export default function Iskuba() {
           >
             <source src="https://storage.coverr.co/videos/7RzPQrmB00s01rknm8VJnXahEyCy4024IMG?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBJZCI6Ijg3NjdFMzIzRjlGQzEzN0E4QTAyIiwiaWF0IjoxNjI5MTg2NjA0fQ.M8oElp5VNO8bWEWmdF2nGiu3qDOOYRFfP8wkKvl8I20" />
           </video>
-
           <svg
             width="100%"
             viewBox="0 0 1486 288"
@@ -55,6 +54,6 @@ export default function Iskuba() {
           </svg>
         </div>
       </section>
-    </>
+    </div>
   );
 }
