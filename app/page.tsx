@@ -8,7 +8,6 @@ import {
   CarouselNext, 
   CarouselPrevious 
 } from "@/components/ui/carousel";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
 
 export default function Home() {
 

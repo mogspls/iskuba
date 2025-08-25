@@ -3,8 +3,6 @@ import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Iskuba from "@/components/Iskuba";
 import "./globals.css";
-import { DrawerProvider } from "@/hooks/useDrawer";
-
 
 export const metadata: Metadata = {
   title: "ISKUBA Philippines",
@@ -21,9 +19,7 @@ export default function RootLayout({
       <body className={`antialiased`}>
         <Iskuba />
         <Header />
-        <DrawerProvider>
-          {children}
-        </DrawerProvider>
+        {children}
       </body>
     </html>
   );
