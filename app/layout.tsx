@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Exo_2 } from "next/font/google";
-import Header from "@/components/Header";
-import Iskuba from "@/components/Iskuba";
+import { Exo_2 } from "next/font/google";
+import Header from "@/components/layout/Header";
+import Iskuba from "@/components/layout/Iskuba";
 import "./globals.css";
+import Footer from "@/components/layout/Footer";
 
 // Initialize font
 const exo2 = Exo_2({
@@ -24,9 +25,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${exo2.className} antialiased`}>
-        <Iskuba />
-        <Header />
         {children}
+        <Footer/>
       </body>
     </html>
   );

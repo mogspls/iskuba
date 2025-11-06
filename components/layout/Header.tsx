@@ -2,8 +2,31 @@
 import { useEffect, useState } from "react"
 
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { Drawer, DrawerClose, DrawerTrigger, DrawerContent, DrawerDescription, DrawerTitle, DrawerHeader } from "@/components/ui/drawer";
+import { Drawer, DrawerTrigger, DrawerContent, DrawerTitle, DrawerHeader } from "@/components/ui/drawer";
 import { usePathname } from "next/navigation";
+
+export const pages = [
+  {
+    title: "About",
+    name: "About Us — ISKUBA Philippines",
+    href: "/about",
+  },
+  {
+    title: "Courses",
+    name: "Courses we offer— ISKUBA Philippines",
+    href: "/#courses",
+  },
+  {
+    title: "Leisure Dives",
+    name: "Leisure Dives — ISKUBA Philippines",
+    href: "/leisure-dives",
+  },
+  {
+    title: "Contact Us",
+    name: "Contact Us — ISKUBA Philippines",
+    href: "/contact-us"
+  },
+];
 
 export default function Header() {
 
@@ -11,53 +34,30 @@ export default function Header() {
   const [hamburger, setHamburger] = useState<boolean>(false);
   const [hasMounted, setHasMounted] = useState<boolean>(false);
 
-  const isDesktop = useMediaQuery('(min-width: 48rem)');
+    const isDesktop = useMediaQuery('(min-width: 48rem)');
 
-  const pages = [
-    {
-      title: "About",
-      name: "About Us — ISKUBA Philippines",
-      href: "/about",
-    },
-    {
-      title: "Courses",
-      name: "Courses we offer— ISKUBA Philippines",
-      href: "/#courses",
-    },
-    {
-      title: "Leisure Dives",
-      name: "Leisure Dives — ISKUBA Philippines",
-      href: "/leisure-dives",
-    },
-    {
-      title: "Contact Us",
-      name: "Contact Us — ISKUBA Philippines",
-      href: "/contact-us"
-    },
-  ];
+    const pathname = usePathname();
 
-  const pathname = usePathname();
+    useEffect(() => {
+      const match = pages.find((p) => p.href === pathname);
+      if (match) {
+        document.title = match.name;
+      } else {
+        document.title = "ISKUBA Philippines";
+      }
+      setTitle(document.title);
+      setHasMounted(true);
+    }, []);
 
-  useEffect(() => {
-    const match = pages.find((p) => p.href === pathname);
-    if (match) {
-      document.title = match.name;
-    } else {
-      document.title = "ISKUBA Philippines";
+    if(!hasMounted){
+      // Render a minimal fallback that matches client markup before hydration
+      // For example, render nothing or a placeholder nav
+      return (
+        <header className="bg-white fixed bottom-0 w-full md:sticky md:top-0">
+          <section className="max-w-screen-xl mx-auto"></section>
+        </header>
+      );
     }
-    setTitle(document.title);
-    setHasMounted(true);
-  }, []);
-
-  if(!hasMounted){
-    // Render a minimal fallback that matches client markup before hydration
-    // For example, render nothing or a placeholder nav
-    return (
-      <header className="bg-white fixed bottom-0 w-full md:sticky md:top-0">
-        <section className="max-w-screen-xl mx-auto"></section>
-      </header>
-    );
-  }
 
   return (
     <>

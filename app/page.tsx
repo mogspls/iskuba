@@ -1,6 +1,6 @@
 "use client"
 import Head from "next/head";
-import Courses from "@/components/Courses";
+import Courses from "@/components/layout/Courses";
 import { 
   Carousel, 
   CarouselContent, 
@@ -10,6 +10,8 @@ import {
 } from "@/components/ui/carousel";
 import Link from "next/link";
 import Autoplay from "embla-carousel-autoplay"
+import Iskuba from "@/components/layout/Iskuba";
+import Header from "@/components/layout/Header";
 
 export default function Home() {
 
@@ -52,7 +54,9 @@ export default function Home() {
       <Head>
         <title>ISKUBA &mdash; Home</title>
       </Head>
-      <main className="h-full min-h-screen overflow-hidden md pb-24">
+      <Iskuba/>
+      <Header/>
+      <main className="h-full min-h-screen overflow-hidden">
         <Carousel opts={{loop: true}} plugins={[Autoplay({ delay: 4000, stopOnInteraction: true })]}>
           <CarouselContent className="px-6 py-4">
             {mockup.map((slide, i) => {
@@ -78,10 +82,10 @@ export default function Home() {
                   )}
 
                   {/* Content overlay */}
-                  <div className="relative z-10 p-4 md:p-12 bg-gradient-to-b from-transparent from-0% to-black to-75% w-full">
+                  <div className="relative z-10 p-4 md:p-6 bg-gradient-to-b from-transparent from-0% to-black to-75% w-full">
                     <div className="max-w-md flex flex-col gap-4">
                       <h5 className="text-white/50 font-black text-xs md:text-sm">{slide.strapline}</h5>
-                      <h1 className="text-white text-xl sm:text-2xl md:text-4xl font-bold">{slide.title}</h1>
+                      <h1 className="text-white text-lg sm:text-xl md:text-2xl lg:text-4xl font-bold">{slide.title}</h1>
                       <div className="relative z-10">
                         <Link
                           href={slide.path}
@@ -102,27 +106,27 @@ export default function Home() {
           <CarouselNext />
         </Carousel>
         {/* Courses Offered */}
-        <section id="courses" className="border-t border-b border-black/25">
-          <div className="relative max-w-screen-xl mx-auto w-full flex gap-4 md:gap-12 pt-6 sm:pt-12">
-            <div className="flex gap-4 flex-col w-full">
+        <section id="courses" className="border-t">
+          <div className="relative max-w-screen-xl mx-auto w-full flex gap-4 md:gap-12 py-6 sm:pt-12">
+            <div className="flex gap-4 flex-col w-full px-2">
               <h5 className="font-bold text-black text-sm before:block before:content-[''] before:h-0.5 before:w-12 before:bg-black flex items-center gap-2">COURSES OFFERED</h5>
               <h2 className="font-black text-2xl md:text-4xl">ISKUBA</h2>
               <p className="pb-4 text-sm md:text-xl">
-                When you train with us, you're not just checking a box—you're
+                When you train with us, you&apos;re not just checking a box—you&apos;re
                 gaining real skills, real confidence, and a mentor invested in
                 your growth. With over 20 years of experience and teaching style
-                that's firm, focused, and deeply rewarding, we don't just get
-                you certified—we make sure you're ready. Whether it's your first
+                that&apos;s firm, focused, and deeply rewarding, we don&apos;t just get
+                you certified—we make sure you&apos;re ready. Whether it&apos;s your first
                 breath underwater or your first step toward becoming a dive
-                professional, we'll meet you where you are—and challenge you to
+                professional, we&apos;ll meet you where you are—and challenge you to
                 go further.
               </p>
             </div>
           </div>
         </section>
         <Courses/>
-        <section id="leisure-dives" className="border-t border-b border-black/25">
-          <div className="relative max-w-screen-xl mx-auto w-full flex gap-8 md:gap-12 pt-6 sm:pt-12">
+        <section id="leisure-dives" className="border-t border-black/25">
+          <div className="relative max-w-screen-xl mx-auto w-full flex gap-8 md:gap-12 py-12 px-2">
             <div className="flex flex-col-reverse md:flex-row gap-4">
               <div className="flex gap-4 flex-col w-full flex-1">
                 <h5 className="font-bold text-black text-sm before:block before:content-[''] before:h-0.5 before:w-12 before:bg-black flex items-center gap-2">LEISURE DIVES</h5>
@@ -132,6 +136,7 @@ export default function Home() {
                 </p>
               </div>
               <div className="flex-1">
+                {/* eslint-disable-next-line */}
                 <img src="/images/leisure-dives.jpg" alt="Leisure Dives at ISKUBA Philippines" className="rounded-xl border"/>
               </div>
             </div>

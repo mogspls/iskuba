@@ -39,7 +39,7 @@ export default function Courses() {
   const isDesktop = useMediaQuery('(min-width: 40rem)');
 
   return (
-    <section className="w-full border-y">
+    <section className="w-full">
       <div className="max-w-screen-xl mx-auto w-full min-h-24 gap-x-2 gap-y-12 lg:gap-4 py-12 sm:px-4 sm:grid sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4">
         {isDesktop ? (
           courses.map((course, index) => {
@@ -75,7 +75,7 @@ export default function Courses() {
                     className={`flex flex-col text-2xl basis-10/12 p-2 justify-between gap-4`}
                   >
                     <div>
-                      <div className={`w-full aspect-video rounded-2xl ${course.bannerImage ? `bg-[url(${course.bannerImage})]` : "bg-foreground/25"}`}></div>
+                      <div className={`w-full aspect-video rounded-2xl bg-center bg-cover`} style={{ backgroundImage: `url(${course.bannerImage})`}}></div>
                       <div className="w-full">
                         <h2 className="text-sm sm:text-lg md:text-xl font-bold py-2">
                           {course.title}

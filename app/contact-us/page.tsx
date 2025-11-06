@@ -1,7 +1,7 @@
 export default function ContactUs() {
-    return (
-        <main>
-            
-        </main>
-    )
+  return (
+    <main className="py-4 min-h-screen">
+      
+    </main>
+  )
 }

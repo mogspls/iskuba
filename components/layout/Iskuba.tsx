@@ -3,7 +3,7 @@ export default function Iskuba() {
     <div className="border-b border-b-black/25 ">
       <section className="py-4 px-2 max-w-screen-xl mx-auto">
         <div
-          className="relative w-full max-w-screeen-lg mx-auto overflow-hidden"
+          className="relative w-full max-w-screeen-md mx-auto overflow-hidden"
           style={{ paddingBottom: `${(288 / 1490) * 100}%` }}
         >
           <video
@@ -13,7 +13,7 @@ export default function Iskuba() {
             loop
             className="absolute w-full h-full object-cover"
           >
-            <source src="https://storage.coverr.co/videos/7RzPQrmB00s01rknm8VJnXahEyCy4024IMG?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhcHBJZCI6Ijg3NjdFMzIzRjlGQzEzN0E4QTAyIiwiaWF0IjoxNjI5MTg2NjA0fQ.M8oElp5VNO8bWEWmdF2nGiu3qDOOYRFfP8wkKvl8I20" />
+            <source src="https://cdn.coverr.co/videos/coverr-waves-crashing-on-the-shore-694/1080p.mp4" />
           </video>
           <svg
             width="100%"
