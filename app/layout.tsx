@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { Exo_2 } from "next/font/google";
-import Header from "@/components/layout/Header";
-import Iskuba from "@/components/layout/Iskuba";
 import "./globals.css";
 import Footer from "@/components/layout/Footer";
 

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Drawer, DrawerTrigger, DrawerContent, DrawerTitle, DrawerHeader } from "@/components/ui/drawer";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 export const pages = [
   {
@@ -64,13 +65,13 @@ export default function Header() {
       <header className="bg-white flex justify-between fixed bottom-0 border-t border-t-black/25 w-full md:border-t-0 md:sticky md:bottom-auto md:top-0 md:border-b md:border-b-black/25 z-100">
         <section className="max-w-screen-xl w-full mx-auto flex justify-between overflow-hidden">
           <div className="p-2">
-            <a href="/" className="flex bg-white hover:bg-black/5 rounded-sm">
+            <Link href="/" className="flex bg-white hover:bg-black/5 rounded-sm">
               <img
                 src="/images/iskuba-logo.svg"
                 alt="Iskuba Diving Center"
                 className="py-2 px-4 select-none h-16"
               />
-            </a>
+            </Link>
           </div>
 
           {isDesktop ? (
@@ -79,7 +80,7 @@ export default function Header() {
                 {pages.map((page, index) => {
                   return (
                     <li key={index}>
-                      <a href={page.href}>{page.title}</a>
+                      <Link href={page.href}>{page.title}</Link>
                     </li>
                   );
                 })}
