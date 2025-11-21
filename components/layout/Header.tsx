@@ -14,7 +14,7 @@ export const pages = [
   {
     title: "Courses",
     name: "Courses we offer— ISKUBA Philippines",
-    href: "/#courses",
+    href: "/courses",
   },
   {
     title: "Leisure Dives",
@@ -24,7 +24,7 @@ export const pages = [
   {
     title: "Contact Us",
     name: "Contact Us — ISKUBA Philippines",
-    href: "/contact-us"
+    href: "/about#contact-us"
   },
 ];
 
