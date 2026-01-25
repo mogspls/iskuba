@@ -13,7 +13,7 @@ export const pages = [
     href: "/about",
   },
   {
-    title: "Courses",
+    title: "LEARN",
     name: "Courses we offer— ISKUBA Philippines",
     href: "/courses",
   },
