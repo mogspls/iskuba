@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Exo_2 } from "next/font/google";
 import "./globals.css";
 import Footer from "@/components/layout/Footer";
+import { ContactModalProvider } from "@/components/contact-modal";
 
 // Initialize font
 const exo2 = Exo_2({
@@ -23,8 +24,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${exo2.className} antialiased`}>
-        {children}
-        <Footer/>
+        <ContactModalProvider>
+          {children}
+          <Footer/>
+        </ContactModalProvider>
       </body>
     </html>
   );

@@ -66,6 +66,7 @@ export default function Home() {
                 className="flex items-center justify-center text-2xl basis-10/12 p-2 relative"
               >
                 <div className={`aspect-[12/16] md:aspect-[16/7] border w-full rounded-xl relative flex flex-col gap-4 overflow-hidden justify-end `} style={{ backgroundImage: slide.video ? '' : `url(${slide.poster})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                
                   {/* Only show video if slide.video exists */}
                   {slide.video && (
                     <video
