@@ -144,7 +144,7 @@ function CarouselContent({ className, ...props }: React.ComponentProps<"div">) {
       <div
         className={cn(
           "flex",
-          orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col",
+          orientation === "horizontal" ? "!px-0" : "-mt-4 flex-col",
           className
         )}
         {...props}
@@ -162,8 +162,8 @@ function CarouselItem({ className, ...props }: React.ComponentProps<"div">) {
       aria-roledescription="slide"
       data-slot="carousel-item"
       className={cn(
-        "min-w-0 shrink-0 grow-0 basis-full",
-        orientation === "horizontal" ? "pl-4" : "pt-4",
+        "min-w-0 shrink-0 grow-0 basis-full px-2",
+        // orientation === "horizontal" ? "pl-4" : "pt-4",
         className
       )}
       {...props}
@@ -185,10 +185,10 @@ function CarouselPrevious({
       variant={variant}
       size={size}
       className={cn(
-        "absolute size-8 rounded-full",
-        orientation === "horizontal"
-          ? "top-1/2 -left-12 -translate-y-1/2"
-          : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
+        "cursor-pointer size-8 rounded-full",
+        // orientation === "horizontal"
+        //   ? "top-1/2 -left-12 -translate-y-1/2"
+        //   : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
         className
       )}
       disabled={!canScrollPrev}
@@ -215,10 +215,10 @@ function CarouselNext({
       variant={variant}
       size={size}
       className={cn(
-        "absolute size-8 rounded-full",
-        orientation === "horizontal"
-          ? "top-1/2 -right-12 -translate-y-1/2"
-          : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
+        "cursor-pointer size-8 rounded-full",
+        // orientation === "horizontal"
+        //   ? "top-1/2 -right-12 -translate-y-1/2"
+        //   : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
         className
       )}
       disabled={!canScrollNext}
@@ -231,6 +231,62 @@ function CarouselNext({
   )
 }
 
+// Show dots
+
+function CarouselDots({
+  className,
+  dotClassName,
+  ...props
+}: React.ComponentProps<"div"> & { dotClassName?: string }) {
+  const { api } = useCarousel()
+  const [selected, setSelected] = React.useState(0)
+  const [snaps, setSnaps] = React.useState<number[]>([])
+
+  React.useEffect(() => {
+    if (!api) return
+
+    const sync = () => {
+      setSnaps(api.scrollSnapList())
+      setSelected(api.selectedScrollSnap())
+    }
+
+    sync()
+    api.on("reInit", sync)
+    api.on("select", sync)
+
+    return () => {
+      api.off("reInit", sync)
+      api.off("select", sync)
+    }
+  }, [api])
+
+  if (!api || snaps.length <= 1) return null
+
+  return (
+    <div
+      className={cn("flex items-center justify-center gap-2", className)}
+      aria-label="Carousel pagination"
+      {...props}
+    >
+      {snaps.map((_, i) => (
+        <button
+          key={i}
+          type="button"
+          onClick={() => api.scrollTo(i)}
+          aria-label={`Go to slide ${i + 1}`}
+          aria-current={i === selected}
+          className={cn(
+            "h-2 w-2 rounded-full bg-foreground/30 transition-opacity",
+            "focus:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2",
+            i === selected && "bg-foreground opacity-100",
+            dotClassName
+          )}
+        />
+      ))}
+    </div>
+  )
+}
+
 export {
   type CarouselApi,
   Carousel,
@@ -238,4 +294,5 @@ export {
   CarouselItem,
   CarouselPrevious,
   CarouselNext,
+  CarouselDots
 }

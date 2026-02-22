@@ -23,9 +23,9 @@ export const pages = [
     href: "/leisure-dives",
   },
   {
-    title: "Contact Us",
-    name: "Contact Us — ISKUBA Philippines",
-    href: "/about#contact-us"
+    title: "Mayumi Resort",
+    name: "Mayumi Resort— ISKUBA Philippines",
+    href: "/mayumi-resort"
   },
 ];
 

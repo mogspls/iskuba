@@ -10,28 +10,28 @@ export default function Courses() {
       title: "Experience Programs",
       description:
         "These no-commitment, low-pressure programs are perfect for trying the water before diving all the way in.",
-      cta: "/experience-programs",
+      cta: "/courses#experience-programs",
       bannerImage: '/\images/\experience-programs.jpg'
     },
     {
       title: "Certification Courses",
       description:
         "We believe in building divers, not just certifying them. That means clear instruction, patient coaching, and high standards that give you true underwater confidence.",
-      cta: "/certification-courses",
+      cta: "/courses#certification-courses",
       bannerImage: '/\images/\certification-courses.png'
     },
     {
       title: "Pro-Level Training",
       description:
         "When you're ready to turn your passion into purpose, we'll guide you every step of the way with training that prepares you for the real world, not just the exam.",
-      cta: "/pro-level-training",
+      cta: "/courses#pro-level-training",
       bannerImage: '/\images/\pro-level-training.jpg'
     },
     {
       title: "Pro-Level Internship",
       description:
         "Your first step to becoming the diver others look up to, whether you want to train to teach, learn the industry or build a career.",
-      cta: "/pro-level-internship",
+      cta: "/courses#pro-level-internship",
       bannerImage: '/\images/\pro-level-internship.jpg'
     },
   ];

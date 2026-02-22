@@ -32,14 +32,16 @@ type ContactModalContextValue = {
   setSelectedCourse: (course: string) => void;
 };
 
-const ContactModalContext = createContext<ContactModalContextValue | null>(null);
+const ContactModalContext = createContext<ContactModalContextValue | null>(
+  null,
+);
 
 const COURSE_GROUPS: Array<{ label: string; items: string[] }> = [
   {
     label: "Experience Programs",
     items: [
       "Bubblemaker",
-      "Discover Scuba Driving",
+      "Discover Scuba Diving",
       "Discover Snorkeling",
       "Advanced Snorkeling",
     ],
@@ -47,7 +49,7 @@ const COURSE_GROUPS: Array<{ label: string; items: string[] }> = [
   {
     label: "Certification Courses",
     items: [
-      "Scuba Diver",
+      "Scuba Diving",
       "Open Water Diver",
       "Advanced Open Water Diver",
       "Rescue Diver",
@@ -58,13 +60,14 @@ const COURSE_GROUPS: Array<{ label: string; items: string[] }> = [
 
 const ALL_COURSES = COURSE_GROUPS.flatMap((g) => g.items);
 
-// Put these somewhere central if you prefer:
+/* ----------------------------- contact targets ---------------------------- */
+
 const CONTACT_PHONE_LOCAL = "09171240520";
-const CONTACT_PHONE_INTL = "639171240520"; // wa.me expects intl format without "+"
-const CONTACT_TELEGRAM_USERNAME = "ivanarcosis";
-const CONTACT_PHONE_PLUS = "+639178214826";    // Viber-style display
-const CONTACT_PHONE_PLUS_ENC = "%2B639178214826";
+const CONTACT_PHONE_INTL = "639171240520"; // for wa.me (no "+")
+const CONTACT_PHONE_PLUS = "+639178214826"; // for sms:
 const TELEGRAM_USERNAME = "ivanarcosis";
+
+/* -------------------------------- helpers -------------------------------- */
 
 function encode(v: string) {
   return encodeURIComponent(v);
@@ -75,7 +78,6 @@ function buildMessage(args: {
   name: string;
   email: string;
   body: string;
-  pageUrl: string;
 }) {
   const lines = [
     `Course: ${args.course}`,
@@ -83,28 +85,18 @@ function buildMessage(args: {
     `Email: ${args.email || "-"}`,
     "",
     args.body || "",
-    args.pageUrl ? `\nPage: ${args.pageUrl}` : "",
   ];
   return lines.join("\n").trim();
 }
 
-function buildHref(method: ContactMethod, message: string, pageUrl: string) {
+function buildHref(method: ContactMethod, message: string) {
   switch (method) {
     case "whatsapp":
-      // https://wa.me/<number>?text=<urlencoded>
       return `https://wa.me/${CONTACT_PHONE_INTL}?text=${encode(message)}`;
-
     case "telegram":
-      // Official deep link supports draft text:
-      // t.me/<username>?text=<draft_text>
-      // Add &profile only if you want to open the profile instead of the chat. :contentReference[oaicite:3]{index=3}
       return `https://t.me/${TELEGRAM_USERNAME}?text=${encode(message)}`;
-
     case "sms":
-      // RFC 5724 format: sms:+<number>?body=<percent-encoded UTF-8> :contentReference[oaicite:4]{index=4}
-      // Note: some iOS behavior may ignore body per Apple's docs. :contentReference[oaicite:5]{index=5}
       return `sms:${CONTACT_PHONE_PLUS}?body=${encode(message)}`;
-
     case "email":
       return `mailto:?subject=${encode("Scuba Inquiry")}&body=${encode(message)}`;
   }
@@ -113,7 +105,7 @@ function buildHref(method: ContactMethod, message: string, pageUrl: string) {
 function methodLabel(method: ContactMethod) {
   switch (method) {
     case "sms":
-      return "sms";
+      return "SMS";
     case "telegram":
       return "Telegram";
     case "whatsapp":
@@ -123,7 +115,90 @@ function methodLabel(method: ContactMethod) {
   }
 }
 
-export function ContactModalProvider({ children }: { children: React.ReactNode }) {
+/* ----------------------------- validation -------------------------------- */
+
+const EMAIL_RE =
+  /^(?!.*\.\.)([A-Z0-9._%+-]{1,64})@([A-Z0-9-]{1,63}\.)+[A-Z]{2,63}$/i;
+
+function validateName(v: string) {
+  const t = v.trim();
+  if (!t) return "Name is required.";
+  if (t.length < 2) return "Name is too short.";
+  return "";
+}
+
+function validateEmail(v: string) {
+  const t = v.trim();
+  if (!t) return "Email is required.";
+  if (!EMAIL_RE.test(t)) return "Please enter a valid email address.";
+  return "";
+}
+
+function validateBody(v: string) {
+  const t = v.trim();
+  if (!t) return "Message is required.";
+  if (t.length < 8) return "Message is too short.";
+  return "";
+}
+
+/**
+ * Controlled field with:
+ * - validate onBlur (focus-out)
+ * - show errors after blur or submit attempt
+ * - `dirty` flips true once user types (so we can avoid overwriting seeded body)
+ */
+function useBlurValidation(validate: (v: string) => string, initial = "") {
+  const [value, setValue] = useState<string>(initial);
+  const [touched, setTouched] = useState(false);
+  const [error, setError] = useState("");
+  const [dirty, setDirty] = useState(false);
+
+  const onChange: React.ChangeEventHandler<
+    HTMLInputElement | HTMLTextAreaElement
+  > = (e) => {
+    setValue(e.target.value);
+    setDirty(true);
+    // Don’t validate while typing; clear displayed error until blur/submit
+    if (touched) setError("");
+  };
+
+  const onBlur = () => {
+    setTouched(true);
+    setError(validate(value));
+  };
+
+  const validateNow = () => {
+    const err = validate(value);
+    setError(err);
+    return err;
+  };
+
+  const resetMeta = () => {
+    setTouched(false);
+    setError("");
+    setDirty(false);
+  };
+
+  return {
+    value,
+    setValue,
+    touched,
+    error,
+    dirty,
+    onChange,
+    onBlur,
+    validateNow,
+    resetMeta,
+  };
+}
+
+/* ------------------------------ provider --------------------------------- */
+
+export function ContactModalProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [open, setOpen] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
 
@@ -138,7 +213,7 @@ export function ContactModalProvider({ children }: { children: React.ReactNode }
       close: () => setOpen(false),
       setSelectedCourse: (course: string) => setSelectedCourse(course),
     }),
-    [open, selectedCourse]
+    [open, selectedCourse],
   );
 
   return (
@@ -151,50 +226,83 @@ export function ContactModalProvider({ children }: { children: React.ReactNode }
 
 export function useContactModal() {
   const ctx = useContext(ContactModalContext);
-  if (!ctx) {
+  if (!ctx)
     throw new Error("useContactModal must be used within ContactModalProvider");
-  }
   return ctx;
 }
+
+/* -------------------------------- dialog --------------------------------- */
 
 function ContactModalDialog() {
   const { open, close, selectedCourse, setSelectedCourse } = useContactModal();
 
-  const [course, setCourse] = useState<string>(selectedCourse ?? ALL_COURSES[0]);
-  const [contactMethod, setContactMethod] = useState<ContactMethod | "">("");
-  const [name, setName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [body, setBody] = useState<string>("");
+  const [course, setCourse] = useState<string>(
+    selectedCourse ?? ALL_COURSES[0],
+  );
+  const [contactMethod, setContactMethod] = useState<ContactMethod>("sms");
+  const [submitAttempted, setSubmitAttempted] = useState(false);
 
-  // Sync local "course" whenever modal opens for a specific course
+  const nameField = useBlurValidation(validateName);
+  const emailField = useBlurValidation(validateEmail);
+  const bodyField = useBlurValidation(validateBody);
+
+  // Reset UI/meta when the modal opens (only when open flips to true)
   React.useEffect(() => {
-    if (open) {
-      const next = selectedCourse && ALL_COURSES.includes(selectedCourse)
+    if (!open) return;
+
+    setContactMethod("sms");
+    setSubmitAttempted(false);
+
+    nameField.resetMeta();
+    emailField.resetMeta();
+    bodyField.resetMeta();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
+
+  // Keep course in sync + seed body when course changes (e.g., click different DIVE IN button)
+  React.useEffect(() => {
+    if (!open) return;
+
+    const next =
+      selectedCourse && ALL_COURSES.includes(selectedCourse)
         ? selectedCourse
         : ALL_COURSES[0];
 
-      setCourse(next);
-      setSelectedCourse(next);
+    setCourse(next);
+    setSelectedCourse(next);
 
-      // Optional: auto-seed body each open if empty
-      setBody((prev) => prev || `Hi! I'd like to inquire about ${next}.`);
-      setContactMethod("");
+    const seed = `Hi! I'd like to inquire about ${next}.`;
+
+    // ✅ Only overwrite the body if user hasn't typed anything yet
+    if (!bodyField.dirty) {
+      bodyField.setValue(seed);
     }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, selectedCourse]);
 
-  const pageUrl = typeof window !== "undefined" ? window.location.href : "";
-
   const message = buildMessage({
     course,
-    name,
-    email,
-    body,
-    pageUrl,
+    name: nameField.value,
+    email: emailField.value,
+    body: bodyField.value,
   });
 
-  const href =
-    contactMethod !== "" ? buildHref(contactMethod, message, pageUrl) : "";
+  const href = buildHref(contactMethod, message);
+
+  // button gating (errors still show only after blur/submit)
+  const isValid =
+    !validateName(nameField.value) &&
+    !validateEmail(emailField.value) &&
+    !validateBody(bodyField.value);
+
+  const showNameError =
+    !!nameField.error && (nameField.touched || submitAttempted);
+  const showEmailError =
+    !!emailField.error && (emailField.touched || submitAttempted);
+  const showBodyError =
+    !!bodyField.error && (bodyField.touched || submitAttempted);
 
   return (
     <Dialog open={open} onOpenChange={(v: boolean) => (v ? null : close())}>
@@ -208,84 +316,127 @@ function ContactModalDialog() {
 
         <div className="grid gap-4">
           {/* Course */}
-          <div className="grid gap-2">
-            <Label>Course</Label>
-            <Select
-              value={course}
-              onValueChange={(v: string) => {
-                setCourse(v);
-                setSelectedCourse(v);
-              }}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select a course" />
-              </SelectTrigger>
-              <SelectContent>
-                {COURSE_GROUPS.map((group) => (
-                  <SelectGroup key={group.label}>
-                    <SelectLabel className="font-bold">
-                      ---- {group.label} ----
-                    </SelectLabel>
-                    {group.items.map((item) => (
-                      <SelectItem key={item} value={item}>
-                        {item}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid gap-2">
+              <Label>Course</Label>
+              <Select
+                value={course}
+                onValueChange={(v: string) => {
+                  setCourse(v);
+                  setSelectedCourse(v);
+                }}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select a course" />
+                </SelectTrigger>
+                <SelectContent>
+                  {COURSE_GROUPS.map((group) => (
+                    <SelectGroup key={group.label}>
+                      <SelectLabel className="font-bold">
+                        ---- {group.label} ----
+                      </SelectLabel>
+                      {group.items.map((item) => (
+                        <SelectItem key={item} value={item}>
+                          {item}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-          {/* Contact method */}
-          <div className="grid gap-2">
-            <Label>Contact us through</Label>
-            <Select
-              value={contactMethod}
-              onValueChange={(v: string) => setContactMethod(v as ContactMethod)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Choose a channel" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="sms">SMS</SelectItem>
-                <SelectItem value="telegram">Telegram</SelectItem>
-                <SelectItem value="whatsapp">WhatsApp</SelectItem>
-                <SelectItem value="email">Email</SelectItem>
-              </SelectContent>
-            </Select>
+            {/* Contact method */}
+            <div className="grid gap-2">
+              <Label>Contact us through</Label>
+              <Select
+                value={contactMethod}
+                onValueChange={(v: string) =>
+                  setContactMethod(v as ContactMethod)
+                }>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Choose a channel" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="sms">SMS</SelectItem>
+                  <SelectItem value="telegram">Telegram</SelectItem>
+                  <SelectItem value="whatsapp">WhatsApp</SelectItem>
+                  <SelectItem value="email">Email</SelectItem>
+                </SelectContent>
+              </Select>
 
-            {/* tiny helper text */}
-            <p className="text-xs text-muted-foreground">
-              Viber uses a forward/share deep link; WhatsApp uses wa.me; Telegram uses share links.
-            </p>
+              {/* <p className="text-xs text-muted-foreground">
+                WhatsApp uses wa.me; Telegram uses t.me; SMS prefills may vary
+                by device.
+              </p> */}
+            </div>
           </div>
 
           {/* Name + Email */}
           <div className="grid gap-4 md:grid-cols-2">
             <div className="grid gap-2">
-              <Label>Name</Label>
-              <Input value={name} onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)} />
-            </div>
-            <div className="grid gap-2">
-              <Label>Email</Label>
+              <Label>
+                Name <span className="text-red-500">*required</span>
+              </Label>
               <Input
-                value={email}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-                type="email"
+                value={nameField.value}
+                onChange={nameField.onChange}
+                onBlur={nameField.onBlur}
+                required
+                aria-invalid={showNameError}
+                className={
+                  showNameError
+                    ? "border-red-500 focus-visible:ring-red-500"
+                    : ""
+                }
               />
+              {showNameError && (
+                <p className="text-xs text-red-500">{nameField.error}</p>
+              )}
+            </div>
+
+            <div className="grid gap-2">
+              <Label>
+                Email <span className="text-red-500">*required</span>
+              </Label>
+              <Input
+                value={emailField.value}
+                onChange={emailField.onChange}
+                onBlur={emailField.onBlur}
+                type="email"
+                required
+                aria-invalid={showEmailError}
+                className={
+                  showEmailError
+                    ? "border-red-500 focus-visible:ring-red-500"
+                    : ""
+                }
+              />
+              {showEmailError && (
+                <p className="text-xs text-red-500">{emailField.error}</p>
+              )}
             </div>
           </div>
 
           {/* Body */}
           <div className="grid gap-2">
-            <Label>Body</Label>
+            <Label>
+              Body <span className="text-red-500">*required</span>
+            </Label>
             <Textarea
-              value={body}
-              onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setBody(e.target.value)}
+              value={bodyField.value}
+              onChange={bodyField.onChange}
+              onBlur={bodyField.onBlur}
               rows={6}
-              placeholder={`Type your message...`}
+              placeholder="Type your message..."
+              required
+              aria-invalid={showBodyError}
+              className={
+                showBodyError ? "border-red-500 focus-visible:ring-red-500" : ""
+              }
             />
+            {showBodyError && (
+              <p className="text-xs text-red-500">{bodyField.error}</p>
+            )}
           </div>
 
           {/* Send */}
@@ -295,36 +446,35 @@ function ContactModalDialog() {
             </Button>
 
             <Button
-              asChild
-              disabled={contactMethod === ""}
               type="button"
+              disabled={!isValid}
               onClick={() => {
-                // optional: close right after user clicks send
-                // close();
-              }}
-            >
-              <a
-                href={href}
-                target={contactMethod === "email" ? undefined : "_blank"}
-                rel="noreferrer"
-              >
-                {contactMethod === ""
-                  ? "Send"
-                  : `Send via ${methodLabel(contactMethod)}`}
-              </a>
+                setSubmitAttempted(true);
+
+                const nErr = nameField.validateNow();
+                const eErr = emailField.validateNow();
+                const bErr = bodyField.validateNow();
+
+                if (nErr || eErr || bErr) return;
+
+                if (contactMethod === "email") window.location.href = href;
+                else window.open(href, "_blank", "noopener,noreferrer");
+
+                close();
+              }}>
+              {`Send via ${methodLabel(contactMethod)}`}
             </Button>
           </div>
 
-          {/* Optional: show what will be sent */}
+          {/* Preview */}
           {/* <div className="rounded-md border p-3 text-xs whitespace-pre-wrap bg-muted/30">
             <div className="font-semibold mb-1">Preview</div>
             {message || "(empty)"}
           </div> */}
         </div>
 
-        {/* Optional: display phone for clarity */}
         <div className="text-xs text-muted-foreground mt-2">
-          Viber/WhatsApp number: {CONTACT_PHONE_LOCAL} · Telegram: @{CONTACT_TELEGRAM_USERNAME}
+          WhatsApp/SMS: {CONTACT_PHONE_LOCAL} · Telegram: @{TELEGRAM_USERNAME}
         </div>
       </DialogContent>
     </Dialog>

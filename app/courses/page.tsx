@@ -3,6 +3,9 @@ import {
   Carousel,
   CarouselItem,
   CarouselContent,
+  CarouselDots,
+  CarouselPrevious,
+  CarouselNext,
 } from "@/components/ui/carousel";
 
 // Components
@@ -24,13 +27,18 @@ const experiencePrograms = [
   {
     name: "Discover Scuba Diving",
     duration: "2 hours",
-    notes: ["Minimum age 10 years old", "12m/40ft max"],
+    notes: [
+      "Minimum age 10 years old",
+      "12m/40ft max",
+      "POOL ONLY DIVE or,",
+      "OPEN WATER",
+    ],
     description:
       "Never dived before? We've got you. Get a taste of scuba in a controlled, guided session in the pool, and in open water—perfect for travelers or the just-curious.",
   },
   {
     name: "Discover Snorkeling",
-    duration: "2 hours",
+    duration: "1 hour",
     notes: ["Minimum age 8 years old"],
     description:
       "No tanks required. Explore vibrant reefs from the surface with an experienced guide by your side.",
@@ -202,7 +210,9 @@ export default function Courses() {
             />
           </div>
         </section>
-        <section className="bg-foreground/10 min-h-2/4 py-4 px-4">
+        <section
+          id="experience-programs"
+          className="bg-foreground/10 min-h-2/4 py-4 px-4 pt-12">
           <div className="max-w-screen-xl mx-auto w-full lg:px-4 lg:py-4 flex gap-2 flex-col">
             <div className="py-4">
               <h6 className="font-bold text-black text-sm before:block before:content-[''] before:h-0.5 before:w-12 before:bg-black flex items-center gap-2">
@@ -228,8 +238,7 @@ export default function Courses() {
               {experiencePrograms.map((program, index) => (
                 <div
                   key={index}
-                  className="bg-white rounded-2xl shadow-xs p-4 flex-1 w-full flex flex-col justify-between"
-                >
+                  className="bg-white rounded-2xl shadow-xs p-4 flex-1 w-full flex flex-col justify-between">
                   <div>
                     <h1 className="font-bold text-black text-xl md:text-2xl">
                       {program.name}
@@ -249,8 +258,7 @@ export default function Courses() {
                   <div className="py-4">
                     <button
                       onClick={() => openForCourse(program.name)}
-                      className="bg-[#3495ff] w-full font-bold text-white py-4 rounded-md cursor-pointer hover:bg-blue-400/95 transition duration-75"
-                    >
+                      className="bg-[#3495ff] w-full font-bold text-white py-4 rounded-md cursor-pointer hover:bg-blue-400/95 transition duration-75">
                       DIVE IN
                     </button>
                   </div>
@@ -259,32 +267,47 @@ export default function Courses() {
             </div>
           </div>
         </section>
-        <section>
-          <div className="max-w-screen-xl mx-auto w-full lg:px-4 lg:py-4 flex gap-2 flex-col">
-            <div className="p-4">
-              <h6 className="font-bold text-black text-sm before:block before:content-[''] before:h-0.5 before:w-12 before:bg-black flex items-center gap-2">
-                CERTIFICATION COURSES
-              </h6>
-              <h1 className="font-bold text-black text-2xl md:text-4xl">
-                Your path to becoming a real diver&mdash;done right.
-              </h1>
+        <section id="certification-courses" className="pb-12 pt-0 lg:py-12">
+          <div className="max-w-screen-xl mx-auto w-full lg:px-4 lg:py-4 flex gap-2 flex-col lg:flex-row">
+            <div className="flex-1">
+              <div className="p-4">
+                <h6 className="font-bold text-black text-sm before:block before:content-[''] before:h-0.5 before:w-12 before:bg-black flex items-center gap-2">
+                  CERTIFICATION COURSES
+                </h6>
+                <h1 className="font-bold text-black text-2xl md:text-4xl">
+                  Your path to becoming a real diver&mdash;done right.
+                </h1>
+              </div>
+              <p className="pb-8 px-4">
+                We believe in building divers, not just certifying them. That
+                means clear instruction, patient coaching, and high standards
+                that give you true underwater confidence. Our course fees
+                include equipment rentals and professional fees for entry-level
+                courses.
+                {/* You have the option to purchase your elearning course materials HERE. */}
+              </p>
             </div>
-            <p className="pb-8 px-4">
-              We believe in building divers, not just certifying them. That
-              means clear instruction, patient coaching, and high standards that
-              give you true underwater confidence. Our course fees include
-              equipment rentals and professional fees for entry-level courses.
-              {/* You have the option to purchase your elearning course materials HERE. */}
-            </p>
+            <div className="w-full flex-1">
+              <video
+                className="block w-full h-64 lg:h-full object-cover rounded-none lg:rounded-2xl"
+                autoPlay
+                loop
+                muted
+                playsInline>
+                <source src={`/videos/Turtle%20David.mp4`} type="video/mp4" />
+              </video>
+            </div>
           </div>
           <Carousel
-            opts={{ loop: true }}
-            plugins={[Autoplay({ delay: 4000, stopOnInteraction: true })]}
+            opts={{ loop: true, align: "center" }}
+            // plugins={[Autoplay({ delay: 4000, stopOnInteraction: true })]}
           >
             <CarouselContent className="px-6 py-4">
               {data.map((course, index) => {
                 return (
-                  <CarouselItem key={index} className="">
+                  <CarouselItem
+                    key={index}
+                    className="basis-[90%] sm:basis-[66%] lg:basis-[30%]">
                     <CoursesBox
                       key={index}
                       title={course.title}
@@ -300,6 +323,12 @@ export default function Courses() {
                 );
               })}
             </CarouselContent>
+
+            <div className="max-w-screen-xl px-4 mx-auto w-full flex items-center gap-4">
+              <CarouselPrevious />
+              <CarouselDots />
+              <CarouselNext />
+            </div>
           </Carousel>
         </section>
         <section></section>

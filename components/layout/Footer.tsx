@@ -26,7 +26,7 @@ export default function Footer() {
                 Brgy. Bagalangit, Mabini, Mabini, Batangas, Philippines
               </a>
             </div>
-            <Link href="/contact-us" className="bg-foreground/10 text-center p-2 rounded-full font-bold text-xs w-full">
+            <Link href="/about#contact-us" className="bg-foreground/10 text-center p-2 rounded-full font-bold text-xs w-full">
               CONTACT US
             </Link>
           </div>
