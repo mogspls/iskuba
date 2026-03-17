@@ -39,7 +39,7 @@ export default function CoursesBox({
   prerequisites,
   video,
   lists,
-  subdescription
+  subdescription,
 }: Props) {
   const matches = useMediaQuery("(min-width: 768px)");
   const { openForCourse } = useContactModal();
@@ -59,7 +59,7 @@ export default function CoursesBox({
           </video>
         </div>
       )}
-      <aside className="flex-1 flex flex-col p-4 justify-between">
+      <aside className="flex-1 flex flex-col p-4 justify-between gap-4">
         <div className="flex flex-col">
           {title && <h1 className="text-lg lg:text-2xl font-bold">{title}</h1>}
           {description && (
@@ -132,7 +132,7 @@ export default function CoursesBox({
                 </div>
               )}
             </div>
-          ) : (
+          ) : equipment || prerequisites ? (
             <div className="py-4">
               <Accordion type="single" collapsible>
                 <AccordionItem
@@ -177,13 +177,16 @@ export default function CoursesBox({
                 </AccordionItem>
               </Accordion>
             </div>
+          ) : null}
+          {subdescription && (
+            <p className="py-2 text-xs lg:text-base">{subdescription}</p>
           )}
-          {subdescription && <p className="py-2 text-xs lg:text-base">{subdescription}</p>}
         </div>
         <div>
           <button
             onClick={() => openForCourse(title)}
-            className="bg-[#3495ff] w-full font-bold text-white py-4 rounded-md cursor-pointer hover:bg-blue-400/95 transition duration-75">
+            className="bg-[#3495ff] w-full font-bold text-white py-4 rounded-md cursor-pointer hover:bg-blue-400/95 transition duration-75"
+          >
             DIVE IN
           </button>
         </div>

@@ -203,7 +203,6 @@ export default function Home() {
                   href="/leisure-dives"
                   
                     className="inline-block rounded-xl bg-black text-white px-6 py-3 font-semibold w-max hover:opacity-90 transition"
-                  // className="bg-black text-white font-semibold border rounded-full text-sm px-4 py-2 inline-block w-max"
                 >
                   LEARN MORE
                 </Link>
