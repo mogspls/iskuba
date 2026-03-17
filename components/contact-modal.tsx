@@ -49,7 +49,7 @@ const COURSE_GROUPS: Array<{ label: string; items: string[] }> = [
   {
     label: "Certification Courses",
     items: [
-      "Scuba Diving",
+      "Scuba Diver",
       "Open Water Diver",
       "Advanced Open Water Diver",
       "Rescue Diver",

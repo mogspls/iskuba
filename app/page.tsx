@@ -28,7 +28,7 @@ function pickVideoSrc(video: Slide["video"], isDesktop: boolean) {
   if (!video || video.length === 0) return null;
   if (video.length === 1) return video[0];
   // video[0] = desktop, video[1] = mobile
-  return isDesktop ? video[0] : video[1] ?? video[0];
+  return isDesktop ? video[0] : (video[1] ?? video[0]);
 }
 
 export default function Home() {
@@ -45,7 +45,8 @@ export default function Home() {
       },
       {
         strapline: "ABOUT US",
-        title: "Built on trust. Backed by experience. Inspired by every new diver.",
+        title:
+          "Built on trust. Backed by experience. Inspired by every new diver.",
         path: "/about",
         poster: "/images/about.jpg",
         video: ["/videos/Clownfish hangout.webm"], // only 1 source
@@ -63,17 +64,23 @@ export default function Home() {
         path: "/courses#pro-level-internship",
         poster: "/images/pro-level-internship.jpg",
         // desktop first, mobile second
-        video: ["/videos/Pro-level-internship.mp4", "/videos/PRO_LEVEL_INTERNSHIP.mp4"],
+        video: [
+          "/videos/Pro-level-internship.mp4",
+          "/videos/PRO_LEVEL_INTERNSHIP.mp4",
+        ],
       },
       {
         strapline: "PRO-LEVEL TRAINING",
         title: "Lead. Mentor. Make a difference underwater",
         path: "/courses#pro-level-training",
         poster: "/images/pro-level-training.jpg",
-        video: ["/videos/Pro-Level-Training.mp4", "/videos/PRO_LEVEL_TRAINING.mp4"],
+        video: [
+          "/videos/Pro-Level-Training.mp4",
+          "/videos/PRO_LEVEL_TRAINING.mp4",
+        ],
       },
     ],
-    []
+    [],
   );
 
   return (
@@ -129,7 +136,7 @@ export default function Home() {
                         <h1 className="text-white text-lg sm:text-xl md:text-2xl lg:text-4xl font-bold">
                           {slide.title}
                         </h1>
-                        <div className="relative z-10">
+                        <div className="relative z-10 pt-2 lg:pt-4">
                           <Link
                             href={slide.path}
                             className="bg-white text-black font-semibold border rounded-full text-sm px-4 py-2 inline-block"
@@ -161,8 +168,16 @@ export default function Home() {
               </h5>
               <h2 className="font-black text-2xl md:text-4xl">ISKUBA</h2>
               <p className="pb-4 text-sm md:text-xl">
-                When you train with us, you&apos;re not just checking a box—you&apos;re
-                gaining real skills, real confidence, and a mentor invested in your growth...
+                When you train with us, you’re not just checking a box—you’re
+                gaining real skills, real confidence, and a mentor who’s
+                invested in your growth. With over 20 years of experience and a
+                teaching style that’s firm, focused, and deeply rewarding, we
+                don’t just get you certified—we make sure you’re ready.
+              </p>
+              <p className="pb-4 text-sm md:text-xl">
+                Whether it’s your first breath underwater or your first step
+                toward becoming a dive professional, we’ll meet you where you
+                are—and challenge you to go further.
               </p>
             </div>
           </div>
@@ -181,9 +196,17 @@ export default function Home() {
                   Explore with Confidence. Dive With Professionals
                 </h2>
                 <p className="pb-4 text-sm md:text-xl">
-                  Our fun dives are more than just a splash in the water—they’re guided
-                  experiences led by real dive professionals...
+                  Our fun dives are more than just a splash in the water—they’re
+                  guided experiences led by real dive professionals...
                 </p>
+                <Link
+                  href="/leisure-dives"
+                  
+                    className="inline-block rounded-xl bg-black text-white px-6 py-3 font-semibold w-max hover:opacity-90 transition"
+                  // className="bg-black text-white font-semibold border rounded-full text-sm px-4 py-2 inline-block w-max"
+                >
+                  LEARN MORE
+                </Link>
               </div>
               <div className="flex-1">
                 {/* eslint-disable-next-line */}

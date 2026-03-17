@@ -56,7 +56,7 @@ const experiencePrograms = [
 const data = [
   {
     video: "Turtle%20David.mp4",
-    title: "Scuba Diving",
+    title: "Scuba Diver",
     description:
       "A quick-start course for those short on time. Dive safely with a professional up to 12 meters.",
     price: "PHP 17,500 / USD 317",
