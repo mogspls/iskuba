@@ -5,8 +5,14 @@ import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { Drawer, DrawerTrigger, DrawerContent, DrawerTitle, DrawerHeader } from "@/components/ui/drawer";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export const pages = [
+  {
+    title: "Home",
+    name: "Home - ISKUBA Philippines",
+    href: "/",
+  },
   {
     title: "About",
     name: "About Us — ISKUBA Philippines",
@@ -23,14 +29,15 @@ export const pages = [
     href: "/leisure-dives",
   },
   {
-    title: "Mayumi Resort",
-    name: "Mayumi Resort— ISKUBA Philippines",
-    href: "/mayumi-resort"
+    title: "Contact Us",
+    name: "Contact Us — ISKUBA Philippines",
+    href: "/about#contact-us",
   },
 ];
 
 export default function Header() {
 
+  const router = useRouter();
   const [title, setTitle] = useState<string>("");
   const [hamburger, setHamburger] = useState<boolean>(false);
   const [hasMounted, setHasMounted] = useState<boolean>(false);
@@ -79,7 +86,7 @@ export default function Header() {
               <ul className="flex gap-6 uppercase">
                 {pages.map((page, index) => {
                   return (
-                    <li key={index}>
+                    <li key={index} className={`py-4 border-b-2 ${pathname === page.href ? "font-bold" : "border-transparent"} hover:border-black`}>
                       <Link href={page.href}>{page.title}</Link>
                     </li>
                   );

@@ -48,7 +48,7 @@ export default function Home() {
         title: "Built on trust. Backed by experience. Inspired by every new diver.",
         path: "/about",
         poster: "/images/about.jpg",
-        video: ["/videos/Clownfish Hangout.webm"], // only 1 source
+        video: ["/videos/Clownfish hangout.webm"], // only 1 source
       },
       {
         strapline: "EXPERIENCE PROGRAM",
@@ -63,7 +63,7 @@ export default function Home() {
         path: "/courses#pro-level-internship",
         poster: "/images/pro-level-internship.jpg",
         // desktop first, mobile second
-        video: ["/videos/Pro-Level-Internship.mp4", "/videos/PRO_LEVEL_INTERNSHIP.mp4"],
+        video: ["/videos/Pro-level-internship.mp4", "/videos/PRO_LEVEL_INTERNSHIP.mp4"],
       },
       {
         strapline: "PRO-LEVEL TRAINING",
