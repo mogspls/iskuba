@@ -15,6 +15,7 @@ import Iskuba from "@/components/layout/Iskuba";
 import Autoplay from "embla-carousel-autoplay";
 
 import { useContactModal } from "@/components/contact-modal";
+import { title } from "process";
 
 const experiencePrograms = [
   {
@@ -170,6 +171,58 @@ const data = [
   },
 ];
 
+const proLevelTraining = [
+  {
+    title: "Divemaster",
+    description:
+      "The first step into professional diving. Gain hands-on experience, assist with real students, and become the diver others look up to.",
+    duration: "10-15 Days",
+    price: "Starts at PHP 65,000 / USD 1,161",
+  },
+  {
+    title: "Specialty Instructor Course",
+    description:
+      "Expand your skills. Offer more to your future students. Get certified to teach the specialties that matter to you.",
+    duration: "1-2 days per specialty instructor course",
+    price: "Starts at PHP 15,000 / USD 268",
+  },
+];
+
+const proLevelInternships = [
+  {
+    title: "Divemaster Internship",
+    description: "This internship This internship isn’t just about logging dives—it’s about earning your place in the dive industry through mentorship, real experience, and a clear standard of excellence. You’ll work side-by-side with experienced instructors and be immersed in all aspects of daily dive operations, including:",
+    lists: [
+      "Assisting real students across multiple course levels",
+      "Leading dives and guiding certified divers under supervision",
+      "Customer service and guest care&mdash;before and after every dive",
+      "Learning how to sell dive courses and gear with confidence and integrity",
+      "Tank filling procedures and safety",
+      "Basic boat operation and crew responsibilities",
+      "Equipment care and troubleshoot fundamentals"
+    ],
+    price: "PHP 10000 / USD 179 per week",
+    duration: "10 days or 40 hours",
+    subdescription: "This program is for those who want to do it right—who want to lead with knowledge, maturity, and calm underwater presence. We don’t just certify divemasters—we help create dependable dive leaders."
+  },
+  {
+    title: "Instructor Internship",
+    description: "Our Instructor Internship offers more than just an IDC—it’s a professional development program designed to prepare you for everything that comes with becoming a working dive instructor. Alongside your Instructor Development Course and specialty instructor training, you’ll gain real-world experience in:",
+    lists: [
+      "Teaching and assisting at every course level,",
+      "Building comfort and confidence in front of real students",
+      "Providing excellent guest service, both in and out of the water",
+      "Selling courses, upgrades, and gear in a way that feels natural and ethical",
+      "Tank handling and compressor basics",
+      "Boat prep, safety, and daily operations",
+      "Equipment care and how to handle common tech issues"
+    ],
+    price: "PHP 10000 / USD 179 per week",
+    duration: "10 days or 40 hours",
+    subdescription: "You'll also get one-on-one mentorship with a PADI Course Director, personalized feedback, and guidance on navigating the dive industry after certification. Our goal isn't to just help you pass the IE&mdash;we want you to leave ready for work, ready to teach, and ready to stand out."
+  }
+]
+
 export default function Courses() {
   const { openForCourse } = useContactModal();
   return (
@@ -211,8 +264,9 @@ export default function Courses() {
           </div>
         </section>
         <section
+          className="bg-foreground/10 min-h-2/4 py-4 px-4 lg:pt-20"
           id="experience-programs"
-          className="bg-foreground/10 min-h-2/4 py-4 px-4 pt-12">
+        >
           <div className="max-w-screen-xl mx-auto w-full lg:px-4 lg:py-4 flex gap-2 flex-col">
             <div className="py-4">
               <h6 className="font-bold text-black text-sm before:block before:content-[''] before:h-0.5 before:w-12 before:bg-black flex items-center gap-2">
@@ -266,8 +320,7 @@ export default function Courses() {
               ))}
             </div>
           </div>
-        </section>
-        <section id="certification-courses" className="pb-12 pt-0 lg:py-12">
+        </section>        <section id="certification-courses" className="pb-12 pt-0 lg:py-12">
           <div className="max-w-screen-xl mx-auto w-full lg:px-4 lg:py-4 flex gap-2 flex-col lg:flex-row">
             <div className="flex-1">
               <div className="p-4">
@@ -316,7 +369,6 @@ export default function Courses() {
                       duration={course.duration}
                       depth={course.depth}
                       equipment={course.equipment}
-                      video={course.video}
                       prerequisites={course.prerequisites}
                     />
                   </CarouselItem>
@@ -331,7 +383,96 @@ export default function Courses() {
             </div>
           </Carousel>
         </section>
-        <section></section>
+        <section id="pro-level-training" className="bg-foreground/10 py-20">
+          <div className="max-w-screen-xl mx-auto w-full lg:px-4 lg:py-4 flex gap-2 flex-col">
+            <div className="flex flex-col lg:flex-row">
+              <div className="flex-1">
+                <div className="p-4">
+                  <h6 className="font-bold text-black text-sm before:block before:content-[''] before:h-0.5 before:w-12 before:bg-black flex items-center gap-2">
+                    PRO-LEVEL TRAINING
+                  </h6>
+                  <h1 className="font-bold text-black text -2xl md:text-4xl">
+                    Lead. Mentor. Make a difference underwater.
+                  </h1>
+                </div>
+                <p className="pb-8 px-4">
+                  We believe in building divers, not just certifying them. That
+                  means clear instruction, patient coaching, and high standards
+                  that give you true underwater confidence. Our course fees
+                  include equipment rentals and professional fees for
+                  entry-level courses.
+                </p>
+              </div>
+              <div className="flex-1">
+                <img
+                  src="/images/pro-level-training.JPG"
+                  alt="Pro-Level Training"
+                  className="w-full h-auto object-cover lg:rounded-lg lg:shadow-lg aspect-video object-top-left"
+                />
+              </div>
+            </div>
+          </div>
+          <div>
+            <div className="grid-cols-1 grid md:grid-cols-2 gap-4 max-w-screen-xl mx-auto w-full py-4">
+              {proLevelTraining.map((course, index) => (
+                <div
+                  key={index}
+                  className="bg-white rounded-2xl shadow-xs p-4 flex-1 w-full flex flex-col justify-between"
+                >
+                  <CoursesBox
+                    key={index}
+                    title={course.title}
+                    description={course.description}
+                    price={course.price}
+                    duration={course.duration}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+        <section id="pro-level-internships" className="py-20">
+          <div className="max-w-screen-xl mx-auto w-full lg:px-4 lg:py-4 flex gap-2 flex-col">
+            <div className="flex flex-col lg:flex-row">
+              <div className="flex-1">
+                <img
+                  src="/images/pro-level-internship-2.JPG"
+                  alt="Pro-Level Internship"
+                  className="w-full h-auto object-cover lg:rounded-lg lg:shadow-lg aspect-video object-top-left"
+                />
+              </div>
+              <div className="flex-1">
+                <div className="p-4">
+                  <h6 className="font-bold text-black text-sm before:block before:content-[''] before:h-0.5 before:w-12 before:bg-black flex items-center gap-2">
+                    PRO-LEVEL INTERNSHIPS
+                  </h6>
+                  <h1 className="font-bold text-black text -2xl md:text-4xl">
+                    Become the diver others look up to.
+                  </h1>
+                </div>
+                <p className="pb-8 px-4">
+                  This internship isn’t just about logging dives—it’s about
+                  earning your place in the dive industry through mentorship,
+                  real experience, and a clear standard of excellence. You’ll
+                  work side-by-side with experienced instructors and be immersed
+                  in all aspects of daily dive operations, including:
+                </p>
+              </div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
+              {proLevelInternships.map((course, index) => (
+                <CoursesBox
+                  key={index}
+                  title={course.title}
+                  description={course.description}
+                  price={course.price}
+                  duration={course.duration}
+                  lists={course.lists}
+                />
+              ))}
+            </div>
+          </div>
+        </section>
       </main>
     </>
   );

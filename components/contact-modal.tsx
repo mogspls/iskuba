@@ -53,9 +53,35 @@ const COURSE_GROUPS: Array<{ label: string; items: string[] }> = [
       "Open Water Diver",
       "Advanced Open Water Diver",
       "Rescue Diver",
-      "Emergency First Response",
+      "Emergency First Response (EFR)",
     ],
   },
+  {
+    label: "Pro Level Training",
+    items: [
+      "Divemaster",
+      "Specialty Instructor Course",
+    ]
+  },
+  {
+    label: "Pro Level Internships",
+    items: [
+      "Divemaster Internship",
+      "Instructor Internship",
+    ]
+  },
+  {
+    label: "Leisure Dives",
+    items: [
+      "Refresher Dive",
+    ]
+  },
+  {
+    label: "Others",
+    items: [
+      "Other inquiries (e.g. The Shack Hideaway, Gear inquiries, etc.)"
+    ]
+  }
 ];
 
 const ALL_COURSES = COURSE_GROUPS.flatMap((g) => g.items);
@@ -316,34 +342,34 @@ function ContactModalDialog() {
 
         <div className="grid gap-4">
           {/* Course */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="grid gap-2">
-              <Label>Course</Label>
-              <Select
-                value={course}
-                onValueChange={(v: string) => {
-                  setCourse(v);
-                  setSelectedCourse(v);
-                }}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select a course" />
-                </SelectTrigger>
-                <SelectContent>
-                  {COURSE_GROUPS.map((group) => (
-                    <SelectGroup key={group.label}>
-                      <SelectLabel className="font-bold">
-                        ---- {group.label} ----
-                      </SelectLabel>
-                      {group.items.map((item) => (
-                        <SelectItem key={item} value={item}>
-                          {item}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+          <div className="grid gap-2">
+            <Label>Course</Label>
+            <Select
+              value={course}
+              onValueChange={(v: string) => {
+                setCourse(v);
+                setSelectedCourse(v);
+              }}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a course" />
+              </SelectTrigger>
+              <SelectContent>
+                {COURSE_GROUPS.map((group) => (
+                  <SelectGroup key={group.label}>
+                    <SelectLabel className="font-bold border-t-solid border-t-black/50 pt-2 block">
+                    ---{group.label}---
+                    </SelectLabel>
+                    {group.items.map((item) => (
+                      <SelectItem key={item} value={item}>
+                        {item}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
 
             {/* Contact method */}
             <div className="grid gap-2">
@@ -465,13 +491,6 @@ function ContactModalDialog() {
               {`Send via ${methodLabel(contactMethod)}`}
             </Button>
           </div>
-
-          {/* Preview */}
-          {/* <div className="rounded-md border p-3 text-xs whitespace-pre-wrap bg-muted/30">
-            <div className="font-semibold mb-1">Preview</div>
-            {message || "(empty)"}
-          </div> */}
-        </div>
 
         <div className="text-xs text-muted-foreground mt-2">
           WhatsApp/SMS: {CONTACT_PHONE_LOCAL} · Telegram: @{TELEGRAM_USERNAME}
