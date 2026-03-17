@@ -14,6 +14,10 @@ const exo2 = Exo_2({
 export const metadata: Metadata = {
   title: "ISKUBA Philippines",
   description: "",
+  icons: {
+    icon:'/favicon.ico',
+    apple: '/apple-touch-icon.png',
+  },
 };
 
 export default function RootLayout({
@@ -23,6 +27,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/favicon.ico" sizes="any"/>
+      </head>
       <body className={`${exo2.className} antialiased`}>
         <ContactModalProvider>
           {children}
