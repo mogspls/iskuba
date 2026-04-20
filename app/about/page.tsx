@@ -2,7 +2,7 @@
 
 import Header from "@/components/layout/Header";
 import Iskuba from "@/components/layout/Iskuba";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type FacilityMediaItem = {
   type: "image" | "video";
@@ -11,136 +11,96 @@ type FacilityMediaItem = {
   poster?: string;
 };
 
-// const facilityMedia: FacilityMediaItem[] = [
-//   {
-//     type: "image",
-//     src: "/images/facility/shack-hideaway-1.jpg",
-//     alt: "The Shack Hideaway exterior",
-//   },
-//   {
-//     type: "image",
-//     src: "/images/facility/shack-hideaway-2.jpg",
-//     alt: "The Shack Hideaway rooms",
-//   },
-//   {
-//     type: "image",
-//     src: "/images/facility/shack-hideaway-3.jpg",
-//     alt: "The Shack Hideaway restaurant",
-//   },
-//   {
-//     type: "image",
-//     src: "/images/facility/shack-hideaway-4.jpg",
-//     alt: "The Shack Hideaway pool",
-//   },
-//   {
-//     type: "video",
-//     src: "/videos/facility/shack-hideaway-tour.mp4",
-//     alt: "The Shack Hideaway resort video tour",
-//     poster: "/images/facility/shack-hideaway-video-poster.jpg",
-//   },
-// ];
-
-const images = [
-  "IMG_5014.jpg",
-  "IMG_5093.jpg",
-  "IMG_5094.jpg",
-  "IMG_5095.jpg",
-  "IMG_5096.jpg",
-  "IMG_5110.jpg",
-  "IMG_5111.jpg",
-  "IMG_5112.jpg",
-  "IMG_5113.jpg",
-  "IMG_5114.jpg",
-  "IMG_5115.jpg",
-  "IMG_5116.jpg",
-  "IMG_5117.jpg",
-  "IMG_5118.jpg",
-  "IMG_5119.jpg",
-  "IMG_5120.jpg",
-  "IMG_5121.jpg",
-  "IMG_5122.jpg",
-  "IMG_5123.jpg",
-  "IMG_5124.jpg",
-  "IMG_5125.jpg",
-  "IMG_5126.jpg",
-  "IMG_5127.jpg",
-  "IMG_5128.jpg",
-  "IMG_5129.jpg",
-  "IMG_5131.jpg",
-  "IMG_5132.jpg",
-  "IMG_5133.jpg",
-  "IMG_5134.jpg",
-  "IMG_5136.jpg",
-  "IMG_5137.jpg",
-  "IMG_5138.jpg",
-  "IMG_5139.jpg",
-  "IMG_5140.jpg",
-  "IMG_5141.jpg",
-  "IMG_5143.jpg",
-  "IMG_5144.jpg",
-  "IMG_5145.jpg",
-  "IMG_5146.jpg",
-  "IMG_5147.jpg",
-  "IMG_5148.jpg",
-  "IMG_5149.jpg",
-  "IMG_5150.jpg",
-  "IMG_5204.jpg",
-  "IMG_5206.jpg",
-  "IMG_5207.jpg",
-  "IMG_5210.jpg",
-  "IMG_5211.jpg",
-  "IMG_5239.jpg",
-  "dessert_turon(1).jpg",
-  "dessert_turon(2).jpg",
-  "dessert_turon(3).jpg",
-  "dessert_turon(4).jpg",
-  "dessert_turon.jpg",
-  "dish_burrito(1).jpg",
-  "dish_burrito(2).jpg",
-  "dish_burrito.jpg",
-  "dish_quesadilla(1).jpg",
-  "dish_quesadilla(2).jpg",
-  "dish_quesadilla.jpg",
-  "dish_sinigang(1).jpg",
-  "dish_sinigang(2).jpg",
-  "dish_sinigang.jpg",
-  "meal_longganisa.jpg",
-  "meal_ribs(1).jpg",
-  "view_dining(2).jpg",
-  "view_dining.jpg"
-];
-
-const facilityMedia: FacilityMediaItem[] = images.map((img) => ({
-  type: "image",
-  src: `/images/facility/${img}`,
-  alt: `The Shack Hideaway - ${img.split(".")[0].replace(/_/g, " ")}`,
-}));
+function prettifyImageName(filename: string) {
+  return filename
+    .replace(/\.[^/.]+$/, "")
+    .replace(/[_()-]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
 
 export default function About() {
+  const [facilityMedia, setFacilityMedia] = useState<FacilityMediaItem[]>([]);
   const [currentSlide, setCurrentSlide] = useState<number>(0);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [isLoadingImages, setIsLoadingImages] = useState(true);
+  const [imagesError, setImagesError] = useState<string | null>(null);
 
-  const currentMedia = useMemo(
-    () => facilityMedia[currentSlide],
-    [currentSlide],
-  );
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadFacilityImages() {
+      try {
+        setIsLoadingImages(true);
+        setImagesError(null);
+
+        const res = await fetch("/api/facility-images", {
+          cache: "no-store",
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch facility images.");
+        }
+
+        const images: string[] = await res.json();
+
+        const media: FacilityMediaItem[] = images.map((img) => ({
+          type: "image",
+          src: `/images/facility/${img}`,
+          alt: `The Shack Hideaway - ${prettifyImageName(img)}`,
+        }));
+
+        if (isMounted) {
+          setFacilityMedia(media);
+          setCurrentSlide(0);
+        }
+      } catch (error) {
+        console.error("Failed to load facility images:", error);
+
+        if (isMounted) {
+          setImagesError("Unable to load facility images right now.");
+          setFacilityMedia([]);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoadingImages(false);
+        }
+      }
+    }
+
+    loadFacilityImages();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const currentMedia = useMemo(() => {
+    if (!facilityMedia.length) return null;
+    return facilityMedia[currentSlide] ?? facilityMedia[0];
+  }, [facilityMedia, currentSlide]);
 
   const lightboxMedia =
-    lightboxIndex !== null ? facilityMedia[lightboxIndex] : null;
+    lightboxIndex !== null ? facilityMedia[lightboxIndex] ?? null : null;
+
+  const hasMedia = facilityMedia.length > 0;
 
   const goPrev = () => {
+    if (!facilityMedia.length) return;
     setCurrentSlide((prev) =>
       prev === 0 ? facilityMedia.length - 1 : prev - 1,
     );
   };
 
   const goNext = () => {
+    if (!facilityMedia.length) return;
     setCurrentSlide((prev) =>
       prev === facilityMedia.length - 1 ? 0 : prev + 1,
     );
   };
 
   const openLightbox = (index: number) => {
+    if (!facilityMedia.length) return;
     setLightboxIndex(index);
   };
 
@@ -149,14 +109,14 @@ export default function About() {
   };
 
   const goPrevLightbox = () => {
-    if (lightboxIndex === null) return;
+    if (lightboxIndex === null || !facilityMedia.length) return;
     setLightboxIndex(
       lightboxIndex === 0 ? facilityMedia.length - 1 : lightboxIndex - 1,
     );
   };
 
   const goNextLightbox = () => {
-    if (lightboxIndex === null) return;
+    if (lightboxIndex === null || !facilityMedia.length) return;
     setLightboxIndex(
       lightboxIndex === facilityMedia.length - 1 ? 0 : lightboxIndex + 1,
     );
@@ -166,6 +126,7 @@ export default function About() {
     <>
       <Header />
       <Iskuba />
+
       <main className="min-h-screen h-full w-full">
         <section id="about" className="bg-foregound/10 h-full">
           <div className="max-w-screen-xl mx-auto w-full py-12 px-4">
@@ -300,83 +261,105 @@ export default function About() {
               </div>
 
               <div className="w-full lg:max-w-2xl">
-                <div className="relative overflow-hidden rounded-2xl bg-black">
-                  <button
-                    type="button"
-                    onClick={() => openLightbox(currentSlide)}
-                    className="block w-full text-left"
-                  >
-                    {currentMedia.type === "image" ? (
-                      <img
-                        src={currentMedia.src}
-                        alt={currentMedia.alt}
-                        className="w-full aspect-[4/3] object-cover"
-                      />
-                    ) : (
-                      <video
-                        src={currentMedia.src}
-                        poster={currentMedia.poster}
-                        className="w-full aspect-[4/3] object-cover"
-                        muted
-                        playsInline
-                      />
-                    )}
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={goPrev}
-                    className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/85 hover:bg-white text-black rounded-full w-10 h-10 flex items-center justify-center"
-                    aria-label="Previous slide"
-                  >
-                    ‹
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={goNext}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/85 hover:bg-white text-black rounded-full w-10 h-10 flex items-center justify-center"
-                    aria-label="Next slide"
-                  >
-                    ›
-                  </button>
-                </div>
-
-                <div className="flex gap-3 mt-4 overflow-x-auto pb-1">
-                  {facilityMedia.map((item, index) => (
-                    <button
-                      key={`${item.src}-${index}`}
-                      type="button"
-                      onClick={() => setCurrentSlide(index)}
-                      className={`relative shrink-0 rounded-xl overflow-hidden border ${
-                        currentSlide === index
-                          ? "border-black"
-                          : "border-black/10"
-                      }`}
-                    >
-                      {item.type === "image" ? (
-                        <img
-                          src={item.src}
-                          alt={item.alt}
-                          className="w-24 h-24 object-cover"
-                        />
-                      ) : (
-                        <div className="relative">
+                <div className="relative overflow-hidden rounded-2xl bg-black min-h-[300px]">
+                  {isLoadingImages ? (
+                    <div className="w-full aspect-[4/3] flex items-center justify-center bg-black text-white">
+                      Loading facility images...
+                    </div>
+                  ) : imagesError ? (
+                    <div className="w-full aspect-[4/3] flex items-center justify-center bg-black text-white text-center px-6">
+                      {imagesError}
+                    </div>
+                  ) : currentMedia ? (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => openLightbox(currentSlide)}
+                        className="block w-full text-left"
+                      >
+                        {currentMedia.type === "image" ? (
+                          <img
+                            src={currentMedia.src}
+                            alt={currentMedia.alt}
+                            className="w-full aspect-[4/3] object-cover"
+                          />
+                        ) : (
                           <video
-                            src={item.src}
-                            poster={item.poster}
-                            className="w-24 h-24 object-cover"
+                            src={currentMedia.src}
+                            poster={currentMedia.poster}
+                            className="w-full aspect-[4/3] object-cover"
                             muted
                             playsInline
                           />
-                          <div className="absolute inset-0 flex items-center justify-center bg-black/30 text-white text-xs font-bold">
-                            VIDEO
-                          </div>
-                        </div>
+                        )}
+                      </button>
+
+                      {facilityMedia.length > 1 && (
+                        <>
+                          <button
+                            type="button"
+                            onClick={goPrev}
+                            className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/85 hover:bg-white text-black rounded-full w-10 h-10 flex items-center justify-center"
+                            aria-label="Previous slide"
+                          >
+                            ‹
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={goNext}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/85 hover:bg-white text-black rounded-full w-10 h-10 flex items-center justify-center"
+                            aria-label="Next slide"
+                          >
+                            ›
+                          </button>
+                        </>
                       )}
-                    </button>
-                  ))}
+                    </>
+                  ) : (
+                    <div className="w-full aspect-[4/3] flex items-center justify-center bg-black text-white text-center px-6">
+                      No facility images found.
+                    </div>
+                  )}
                 </div>
+
+                {hasMedia && (
+                  <div className="flex gap-3 mt-4 overflow-x-auto pb-1">
+                    {facilityMedia.map((item, index) => (
+                      <button
+                        key={`${item.src}-${index}`}
+                        type="button"
+                        onClick={() => setCurrentSlide(index)}
+                        className={`relative shrink-0 rounded-xl overflow-hidden border ${
+                          currentSlide === index
+                            ? "border-black"
+                            : "border-black/10"
+                        }`}
+                      >
+                        {item.type === "image" ? (
+                          <img
+                            src={item.src}
+                            alt={item.alt}
+                            className="w-24 h-24 object-cover"
+                          />
+                        ) : (
+                          <div className="relative">
+                            <video
+                              src={item.src}
+                              poster={item.poster}
+                              className="w-24 h-24 object-cover"
+                              muted
+                              playsInline
+                            />
+                            <div className="absolute inset-0 flex items-center justify-center bg-black/30 text-white text-xs font-bold">
+                              VIDEO
+                            </div>
+                          </div>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -482,6 +465,7 @@ export default function About() {
                     </h1>
                   </div>
                 </a>
+
                 <a
                   href="https://t.me/ivanarcosis"
                   className="rounded-sm flex flex-col gap-4 bg-white p-2 w-full"
@@ -527,6 +511,7 @@ export default function About() {
                     </h1>
                   </div>
                 </a>
+
                 <a
                   href="https://wa.me/639178214826"
                   className="rounded-sm flex flex-col justify-center gap-4 bg-[#25d366] p-2 w-full"
@@ -559,6 +544,7 @@ export default function About() {
                     </h1>
                   </div>
                 </a>
+
                 <a
                   href="sms:/639178214826"
                   className="rounded-sm flex flex-col justify-center gap-4 bg-black p-2 w-full"
@@ -600,14 +586,16 @@ export default function About() {
             ×
           </button>
 
-          <button
-            type="button"
-            onClick={goPrevLightbox}
-            className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 text-white text-4xl"
-            aria-label="Previous media"
-          >
-            ‹
-          </button>
+          {facilityMedia.length > 1 && (
+            <button
+              type="button"
+              onClick={goPrevLightbox}
+              className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 text-white text-4xl"
+              aria-label="Previous media"
+            >
+              ‹
+            </button>
+          )}
 
           <div className="w-full max-w-6xl">
             {lightboxMedia.type === "image" ? (
@@ -627,14 +615,16 @@ export default function About() {
             )}
           </div>
 
-          <button
-            type="button"
-            onClick={goNextLightbox}
-            className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 text-white text-4xl"
-            aria-label="Next media"
-          >
-            ›
-          </button>
+          {facilityMedia.length > 1 && (
+            <button
+              type="button"
+              onClick={goNextLightbox}
+              className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 text-white text-4xl"
+              aria-label="Next media"
+            >
+              ›
+            </button>
+          )}
         </div>
       )}
     </>

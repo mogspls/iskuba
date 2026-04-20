@@ -52,6 +52,7 @@ const COURSE_GROUPS: Array<{ label: string; items: string[] }> = [
       "Scuba Diver",
       "Open Water Diver",
       "Advanced Open Water Diver",
+      "PADI Specialty Diver courses between Advanced and Rescue",
       "Rescue Diver",
       "Emergency First Response (EFR)",
     ],
@@ -88,8 +89,8 @@ const ALL_COURSES = COURSE_GROUPS.flatMap((g) => g.items);
 
 /* ----------------------------- contact targets ---------------------------- */
 
-const CONTACT_PHONE_LOCAL = "09171240520";
-const CONTACT_PHONE_INTL = "639171240520"; // for wa.me (no "+")
+const CONTACT_PHONE_LOCAL = "+63917 821 4826";
+const CONTACT_PHONE_INTL = "+639178214826"; // for wa.me (no "+")
 const CONTACT_PHONE_PLUS = "+639178214826"; // for sms:
 const TELEGRAM_USERNAME = "ivanarcosis";
 

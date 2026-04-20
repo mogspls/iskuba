@@ -37,13 +37,6 @@ export default function Home() {
   const mockup = useMemo<Slide[]>(
     () => [
       {
-        strapline: "LEISURE DIVES",
-        title: "Explore with confidence. Dive with purpose.",
-        path: "/leisure-dives",
-        poster: "/images/leisure-dives.jpg",
-        video: ["/videos/Victor%20Cathedral.mp4"], // only 1 source
-      },
-      {
         strapline: "ABOUT US",
         title:
           "Built on trust. Backed by experience. Inspired by every new diver.",
@@ -59,15 +52,11 @@ export default function Home() {
         video: ["/videos/player_export.mp4"],
       },
       {
-        strapline: "PRO-LEVEL INTERNSHIP",
-        title: "Become the diver others look up to.",
-        path: "/courses#pro-level-internship",
-        poster: "/images/pro-level-internship.jpg",
-        // desktop first, mobile second
-        video: [
-          "/videos/Pro-level-internship.mp4",
-          "/videos/PRO_LEVEL_INTERNSHIP.mp4",
-        ],
+        strapline: "LEISURE DIVES",
+        title: "Explore with confidence. Dive with purpose.",
+        path: "/leisure-dives",
+        poster: "/images/leisure-dives.jpg",
+        video: ["/videos/Victor%20Cathedral.mp4"], // only 1 source
       },
       {
         strapline: "PRO-LEVEL TRAINING",
@@ -77,6 +66,17 @@ export default function Home() {
         video: [
           "/videos/Pro-Level-Training.mp4",
           "/videos/PRO_LEVEL_TRAINING.mp4",
+        ],
+      },
+      {
+        strapline: "PRO-LEVEL INTERNSHIP",
+        title: "Become the diver others look up to.",
+        path: "/courses#pro-level-internship",
+        poster: "/images/pro-level-internship.jpg",
+        // desktop first, mobile second
+        video: [
+          "/videos/Pro-level-internship.mp4",
+          "/videos/PRO_LEVEL_INTERNSHIP.mp4",
         ],
       },
     ],
