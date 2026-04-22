@@ -173,7 +173,7 @@ const data = [
   },
 
   {
-    title: "PADI Specialty Diver courses between Advanced and Rescue",
+    title: "PADI Specialty Diver courses",
     description:
       "Take your diving to the next level: experience deeper dives, better control, and specialty training tailored to your interests.",
     price: "PHP 9,500 / USD 170",
