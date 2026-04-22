@@ -142,37 +142,6 @@ const data = [
     ],
   },
   {
-    video: "Turtle%20David.mp4",
-    title: "Rescue Diver",
-    description:
-      "Not for the faint-hearted, and totally worth it. Learn to think like a safety diver, manage emergencies, and look out for your dive buddies—serious fun.",
-    price: "PHP 28,000 / USD 507",
-    duration: "3 Days",
-    depth: "MAX 12M/40FT",
-    equipment: ["Rescue breathing mask", "Oxygen tank and regulator"],
-    prerequisites: [
-      "PADI Advanced Open Water Diver and Emergency First Response Primary and Secondary Care (or equivalent)",
-      "Able to Swim",
-      "Medically Fit for Diving",
-      "Comfortable in the water",
-      "Minimum age: 10",
-    ],
-  },
-  {
-    video: "Turtle%20David.mp4",
-    title: "Emergency First Response (EFR)",
-    description:
-      "Learn practical, calm-under-pressure first aid skills that every diver (and human) should have.",
-    price: "PHP 12,000/USD 217.00",
-    duration: "6-8 Hours",
-    equipment: [
-      "CPR Mannequin",
-      "First Aid Equipment",
-      "Oxygen Tank and Regulator",
-    ],
-  },
-
-  {
     title: "PADI Specialty Diver courses",
     description:
       "Take your diving to the next level: experience deeper dives, better control, and specialty training tailored to your interests.",
@@ -200,6 +169,36 @@ const data = [
       "Medically Fit for Diving",
       "Comfortable in the water",
       "Minimum age: 10",
+    ],
+  },
+  {
+    video: "Turtle%20David.mp4",
+    title: "Rescue Diver",
+    description:
+      "Not for the faint-hearted, and totally worth it. Learn to think like a safety diver, manage emergencies, and look out for your dive buddies—serious fun.",
+    price: "PHP 28,000 / USD 507",
+    duration: "3 Days",
+    depth: "MAX 12M/40FT",
+    equipment: ["Rescue breathing mask", "Oxygen tank and regulator"],
+    prerequisites: [
+      "PADI Advanced Open Water Diver and Emergency First Response Primary and Secondary Care (or equivalent)",
+      "Able to Swim",
+      "Medically Fit for Diving",
+      "Comfortable in the water",
+      "Minimum age: 10",
+    ],
+  },
+  {
+    video: "Turtle%20David.mp4",
+    title: "Emergency First Response (EFR)",
+    description:
+      "Learn practical, calm-under-pressure first aid skills that every diver (and human) should have.",
+    price: "PHP 12,000/USD 217.00",
+    duration: "6-8 Hours",
+    equipment: [
+      "CPR Mannequin",
+      "First Aid Equipment",
+      "Oxygen Tank and Regulator",
     ],
   },
 ];
