@@ -42,7 +42,10 @@ export default function Home() {
           "Built on trust. Backed by experience. Inspired by every new diver.",
         path: "/about",
         poster: "/images/about.jpg",
-        video: ["/videos/Clownfish hangout.webm"], // only 1 source
+        video: [
+          "/videos/Clownfish Hangout DESKTOP.webm",
+          "/videos/Clownfish Hangout MOBILE.webm",
+        ],
       },
       {
         strapline: "EXPERIENCE PROGRAM",
@@ -63,9 +66,7 @@ export default function Home() {
         title: "Lead. Mentor. Make a difference underwater",
         path: "/courses#pro-level-training",
         poster: "/images/pro-level-training.jpg",
-        video: [
-          "/videos/GX012647.webm",
-        ],
+        video: ["/videos/GX012647.webm"],
       },
       {
         strapline: "PRO-LEVEL INTERNSHIP",
@@ -73,9 +74,7 @@ export default function Home() {
         path: "/courses#pro-level-internship",
         poster: "/images/pro-level-internship.jpg",
         // desktop first, mobile second
-        video: [
-          "/videos/GX010128.webm",
-        ],
+        video: ["/videos/GX010128.webm"],
       },
     ],
     [],
@@ -93,8 +92,7 @@ export default function Home() {
       <main className="h-full min-h-screen overflow-hidden">
         <Carousel
           opts={{ loop: true }}
-          plugins={[Autoplay({ delay: 4000, stopOnInteraction: true })]}
-        >
+          plugins={[Autoplay({ delay: 4000, stopOnInteraction: true })]}>
           <CarouselContent className="px-6 py-4">
             {mockup.map((slide, i) => {
               const videoSrc = pickVideoSrc(slide.video, isDesktop);
@@ -102,8 +100,7 @@ export default function Home() {
               return (
                 <CarouselItem
                   key={i}
-                  className="flex items-center justify-center text-2xl basis-10/12 p-2 relative"
-                >
+                  className="flex items-center justify-center text-2xl basis-10/12 p-2 relative">
                   <div
                     className="aspect-[12/16] md:aspect-[16/7] border w-full rounded-xl relative flex flex-col gap-4 overflow-hidden justify-end"
                     style={{
@@ -111,8 +108,7 @@ export default function Home() {
                       backgroundImage: `url(${slide.poster})`,
                       backgroundSize: "cover",
                       backgroundPosition: "center",
-                    }}
-                  >
+                    }}>
                     {videoSrc && (
                       <video
                         key={videoSrc} // ✅ forces reload when switching desktop/mobile src
@@ -137,8 +133,7 @@ export default function Home() {
                         <div className="relative z-10 pt-2 lg:pt-4">
                           <Link
                             href={slide.path}
-                            className="bg-white text-black font-semibold border rounded-full text-sm px-4 py-2 inline-block"
-                          >
+                            className="bg-white text-black font-semibold border rounded-full text-sm px-4 py-2 inline-block">
                             LEARN MORE
                           </Link>
                         </div>
@@ -199,9 +194,7 @@ export default function Home() {
                 </p>
                 <Link
                   href="/leisure-dives"
-                  
-                    className="inline-block rounded-xl bg-black text-white px-6 py-3 font-semibold w-max hover:opacity-90 transition"
-                >
+                  className="inline-block rounded-xl bg-black text-white px-6 py-3 font-semibold w-max hover:opacity-90 transition">
                   LEARN MORE
                 </Link>
               </div>
