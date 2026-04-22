@@ -471,7 +471,7 @@ export default function Courses() {
             </div>
           </div>
         </section>
-        <section id="pro-level-internships" className="py-20">
+        <section id="pro-level-internship" className="py-20">
           <div className="max-w-screen-xl mx-auto w-full lg:px-4 lg:py-4 flex gap-2 flex-col">
             <div className="flex flex-col lg:flex-row">
               <div className="flex-1">

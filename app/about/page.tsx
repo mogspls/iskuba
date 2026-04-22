@@ -2,7 +2,7 @@
 
 import Header from "@/components/layout/Header";
 import Iskuba from "@/components/layout/Iskuba";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 type FacilityMediaItem = {
   type: "image" | "video";
@@ -25,6 +25,9 @@ export default function About() {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [isLoadingImages, setIsLoadingImages] = useState(true);
   const [imagesError, setImagesError] = useState<string | null>(null);
+
+  const touchStartX = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -81,7 +84,7 @@ export default function About() {
   }, [facilityMedia, currentSlide]);
 
   const lightboxMedia =
-    lightboxIndex !== null ? facilityMedia[lightboxIndex] ?? null : null;
+    lightboxIndex !== null ? (facilityMedia[lightboxIndex] ?? null) : null;
 
   const hasMedia = facilityMedia.length > 0;
 
@@ -109,17 +112,71 @@ export default function About() {
   };
 
   const goPrevLightbox = () => {
-    if (lightboxIndex === null || !facilityMedia.length) return;
-    setLightboxIndex(
-      lightboxIndex === 0 ? facilityMedia.length - 1 : lightboxIndex - 1,
-    );
+    setLightboxIndex((prev) => {
+      if (prev === null || !facilityMedia.length) return prev;
+      return prev === 0 ? facilityMedia.length - 1 : prev - 1;
+    });
   };
 
   const goNextLightbox = () => {
-    if (lightboxIndex === null || !facilityMedia.length) return;
-    setLightboxIndex(
-      lightboxIndex === facilityMedia.length - 1 ? 0 : lightboxIndex + 1,
-    );
+    setLightboxIndex((prev) => {
+      if (prev === null || !facilityMedia.length) return prev;
+      return prev === facilityMedia.length - 1 ? 0 : prev + 1;
+    });
+  };
+
+  useEffect(() => {
+    if (lightboxIndex === null) return;
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        goPrevLightbox();
+      }
+
+      if (event.key === "ArrowRight") {
+        event.preventDefault();
+        goNextLightbox();
+      }
+
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeLightbox();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [lightboxIndex, facilityMedia.length]);
+
+  const handleTouchStart = (event: React.TouchEvent<HTMLDivElement>) => {
+    touchStartX.current = event.changedTouches[0].clientX;
+    touchEndX.current = null;
+  };
+
+  const handleTouchMove = (event: React.TouchEvent<HTMLDivElement>) => {
+    touchEndX.current = event.changedTouches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (touchStartX.current === null || touchEndX.current === null) return;
+
+    const distance = touchStartX.current - touchEndX.current;
+    const minSwipeDistance = 50;
+
+    if (Math.abs(distance) < minSwipeDistance) return;
+
+    if (distance > 0) {
+      goNextLightbox();
+    } else {
+      goPrevLightbox();
+    }
+
+    touchStartX.current = null;
+    touchEndX.current = null;
   };
 
   return (
@@ -244,16 +301,14 @@ export default function About() {
                     <p>Ernest de Jesus</p>
                     <a
                       href="tel:+639178452383"
-                      className="underline underline-offset-4"
-                    >
+                      className="underline underline-offset-4">
                       +63917 8452383
                     </a>
                     <a
                       href="https://www.facebook.com/mayumi.resorts"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="underline underline-offset-4 break-all"
-                    >
+                      className="underline underline-offset-4 break-all">
                       https://www.facebook.com/mayumi.resorts
                     </a>
                   </div>
@@ -275,8 +330,7 @@ export default function About() {
                       <button
                         type="button"
                         onClick={() => openLightbox(currentSlide)}
-                        className="block w-full text-left"
-                      >
+                        className="block w-full text-left">
                         {currentMedia.type === "image" ? (
                           <img
                             src={currentMedia.src}
@@ -300,8 +354,7 @@ export default function About() {
                             type="button"
                             onClick={goPrev}
                             className="absolute left-3 top-1/2 -translate-y-1/2 bg-white/85 hover:bg-white text-black rounded-full w-10 h-10 flex items-center justify-center"
-                            aria-label="Previous slide"
-                          >
+                            aria-label="Previous slide">
                             ‹
                           </button>
 
@@ -309,8 +362,7 @@ export default function About() {
                             type="button"
                             onClick={goNext}
                             className="absolute right-3 top-1/2 -translate-y-1/2 bg-white/85 hover:bg-white text-black rounded-full w-10 h-10 flex items-center justify-center"
-                            aria-label="Next slide"
-                          >
+                            aria-label="Next slide">
                             ›
                           </button>
                         </>
@@ -334,8 +386,7 @@ export default function About() {
                           currentSlide === index
                             ? "border-black"
                             : "border-black/10"
-                        }`}
-                      >
+                        }`}>
                         {item.type === "image" ? (
                           <img
                             src={item.src}
@@ -371,8 +422,7 @@ export default function About() {
           style={{
             backgroundImage:
               "linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url('images/bg.jpg')",
-          }}
-        >
+          }}>
           <div className="max-w-screen-xl mx-auto w-full py-12 p-4 h-full flex flex-col md:flex-row md:items-center gap-12">
             <div className="flex items-start flex-col gap-4 flex-1">
               <div className="bg-white rounded-2xl py-2 px-3 text-xs">
@@ -385,8 +435,7 @@ export default function About() {
                 <p>Or just reach out manually to </p>
                 <a
                   href="mailto:dive@iskuba.com"
-                  className="text-white hover:underline"
-                >
+                  className="text-white hover:underline">
                   dive@iskuba.com
                 </a>
               </div>
@@ -395,8 +444,7 @@ export default function About() {
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
                   fill="#fff"
-                  className="h-12"
-                >
+                  className="h-12">
                   <path
                     fillRule="evenodd"
                     d="m11.54 22.351.07.04.028.016a.76.76 0 0 0 .723 0l.028-.015.071-.041a16.975 16.975 0 0 0 1.144-.742 19.58 19.58 0 0 0 2.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 0 0-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 0 0 2.682 2.282 16.975 16.975 0 0 0 1.145.742ZM12 13.5a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"
@@ -406,8 +454,7 @@ export default function About() {
                 <a
                   href="https://maps.app.goo.gl/4sAtYRqXnmahA15SA"
                   target="_blank"
-                  className="text-white underline"
-                >
+                  className="text-white underline">
                   Iskuba Diving Center, Mayumi Resort Brgy Bagalangit, Anilao,
                   Mabini, 1550 Batangas, Philippines
                 </a>
@@ -417,15 +464,13 @@ export default function About() {
               <div className="grid grid-cols-2 gap-2">
                 <a
                   href="viber://chat/?number=%2B639178214826"
-                  className="rounded-sm flex flex-col justify-center gap-4 bg-[#7360f2] p-3 w-full"
-                >
+                  className="rounded-sm flex flex-col justify-center gap-4 bg-[#7360f2] p-3 w-full">
                   <div className="flex gap-2 items-center">
                     <svg
                       className="h-6 w-6 sm:h-9 sm:w-8"
                       viewBox="0 0 506 534"
                       fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
+                      xmlns="http://www.w3.org/2000/svg">
                       <path
                         d="M448.708 52.0204C435.455 39.7913 381.897 0.911035 262.599 0.382814C262.599 0.382814 121.916 -8.10073 53.3353 54.8056C15.1593 92.9895 1.72969 148.861 0.313099 218.13C-1.10349 287.399 -2.93626 417.213 122.196 452.412H122.316L122.236 506.122C122.236 506.122 121.436 527.867 135.754 532.301C153.073 537.679 163.237 521.153 179.772 503.337C188.848 493.557 201.381 479.191 210.825 468.21C296.405 475.413 362.224 458.951 369.699 456.518C386.979 450.915 484.756 438.39 500.658 308.584C517.073 174.792 492.719 90.1643 448.708 52.0204Z"
                         fill="white"
@@ -468,15 +513,13 @@ export default function About() {
 
                 <a
                   href="https://t.me/ivanarcosis"
-                  className="rounded-sm flex flex-col gap-4 bg-white p-2 w-full"
-                >
+                  className="rounded-sm flex flex-col gap-4 bg-white p-2 w-full">
                   <div className="flex gap-2 items-center">
                     <svg
                       className="h-6 w-6 sm:h-9 sm:w-8"
                       viewBox="0 0 241 241"
                       fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
+                      xmlns="http://www.w3.org/2000/svg">
                       <g clipPath="url(#clip0_23_18)">
                         <path
                           d="M120.1 240.2C186.429 240.2 240.2 186.429 240.2 120.1C240.2 53.7706 186.429 0 120.1 0C53.7706 0 0 53.7706 0 120.1C0 186.429 53.7706 240.2 120.1 240.2Z"
@@ -496,8 +539,7 @@ export default function About() {
                           y1="0"
                           x2="120"
                           y2="238.3"
-                          gradientUnits="userSpaceOnUse"
-                        >
+                          gradientUnits="userSpaceOnUse">
                           <stop stopColor="#2AABEE" />
                           <stop offset="1" stopColor="#229ED9" />
                         </linearGradient>
@@ -514,15 +556,13 @@ export default function About() {
 
                 <a
                   href="https://wa.me/639178214826"
-                  className="rounded-sm flex flex-col justify-center gap-4 bg-[#25d366] p-2 w-full"
-                >
+                  className="rounded-sm flex flex-col justify-center gap-4 bg-[#25d366] p-2 w-full">
                   <div className="flex gap-2 items-center">
                     <svg
                       className="h-6 w-6 sm:h-8 sm:w-8"
                       viewBox="0 0 40 40"
                       fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
+                      xmlns="http://www.w3.org/2000/svg">
                       <g clipPath="url(#clip0_35_5898)">
                         <path
                           d="M36.864 17.7659C36.6905 13.0141 34.688 8.51307 31.2747 5.20259C27.8614 1.89212 23.3013 0.0281839 18.5464 5.08648e-06H18.4566C15.2546 -0.0023727 12.1071 0.828951 9.32389 2.41218C6.54066 3.9954 4.21759 6.27598 2.58326 9.0295C0.948918 11.783 0.0596307 14.9146 0.00289589 18.1161C-0.0538389 21.3176 0.723934 24.4788 2.25968 27.2885L0.628958 37.0467C0.626302 37.0667 0.62794 37.087 0.633764 37.1064C0.639587 37.1257 0.649464 37.1436 0.662734 37.1588C0.676005 37.174 0.692365 37.1862 0.710726 37.1946C0.729086 37.203 0.749026 37.2074 0.769216 37.2075H0.797267L10.4488 35.0606C12.9425 36.2579 15.6735 36.8791 18.4398 36.8783C18.6156 36.8783 18.7914 36.8783 18.9671 36.8783C21.4005 36.8089 23.796 36.2582 26.0154 35.2581C28.2347 34.258 30.2341 32.8282 31.898 31.0513C33.5619 29.2744 34.8574 27.1855 35.7097 24.9053C36.5621 22.6251 36.9544 20.1986 36.864 17.7659ZM18.8755 33.6711C18.7296 33.6711 18.5838 33.6711 18.4398 33.6711C15.9949 33.6742 13.5852 33.0892 11.4138 31.9656L10.9201 31.7075L4.37477 33.2541L5.58285 26.6321L5.30233 26.1571C3.96255 23.8728 3.24091 21.2789 3.20847 18.631C3.17604 15.983 3.83393 13.3722 5.11736 11.0558C6.40078 8.73942 8.26547 6.79729 10.5278 5.42073C12.79 4.04416 15.3719 3.28063 18.019 3.20535C18.1661 3.20535 18.3139 3.20535 18.4622 3.20535C22.4589 3.2172 26.2909 4.79863 29.1327 7.6089C31.9745 10.4192 33.5986 14.2334 33.655 18.2296C33.7114 22.2259 32.1956 26.0844 29.4343 28.9738C26.673 31.8631 22.8871 33.5521 18.8923 33.6767L18.8755 33.6711Z"
@@ -547,8 +587,7 @@ export default function About() {
 
                 <a
                   href="sms:/639178214826"
-                  className="rounded-sm flex flex-col justify-center gap-4 bg-black p-2 w-full"
-                >
+                  className="rounded-sm flex flex-col justify-center gap-4 bg-black p-2 w-full">
                   <div className="flex gap-2 items-center">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -556,8 +595,7 @@ export default function About() {
                       viewBox="0 0 24 24"
                       strokeWidth="1.5"
                       stroke="white"
-                      className="h-6 w-6 md:h-8 md:w-8"
-                    >
+                      className="h-6 w-6 md:h-8 md:w-8">
                       <path
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -576,28 +614,36 @@ export default function About() {
       </main>
 
       {lightboxMedia && (
-        <div className="fixed inset-0 z-[200] bg-black/90 p-4 md:p-8 flex items-center justify-center">
+        <div
+          className="fixed inset-0 z-[200] bg-black/90 p-4 md:p-8 flex items-center justify-center"
+          onClick={closeLightbox}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}>
           <button
             type="button"
             onClick={closeLightbox}
             className="absolute top-4 right-4 text-white text-3xl leading-none"
-            aria-label="Close lightbox"
-          >
+            aria-label="Close lightbox">
             ×
           </button>
 
           {facilityMedia.length > 1 && (
             <button
               type="button"
-              onClick={goPrevLightbox}
+              onClick={(e) => {
+                e.stopPropagation();
+                goPrevLightbox();
+              }}
               className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 text-white text-4xl"
-              aria-label="Previous media"
-            >
+              aria-label="Previous media">
               ‹
             </button>
           )}
 
-          <div className="w-full max-w-6xl">
+          <div
+            className="w-full max-w-6xl"
+            onClick={(e) => e.stopPropagation()}>
             {lightboxMedia.type === "image" ? (
               <img
                 src={lightboxMedia.src}
@@ -618,10 +664,12 @@ export default function About() {
           {facilityMedia.length > 1 && (
             <button
               type="button"
-              onClick={goNextLightbox}
+              onClick={(e) => {
+                e.stopPropagation();
+                goNextLightbox();
+              }}
               className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 text-white text-4xl"
-              aria-label="Next media"
-            >
+              aria-label="Next media">
               ›
             </button>
           )}
