@@ -145,7 +145,7 @@ const data = [
     title: "PADI Specialty Diver courses",
     description:
       "Take your diving to the next level: experience deeper dives, better control, and specialty training tailored to your interests.",
-    price: "PHP 9,500 / USD 170",
+    price: "PHP 10,500 / USD 187",
     duration: "2-3 Days",
     depth: "MAX 40M/135FT",
     equipment: [
