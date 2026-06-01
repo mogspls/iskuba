@@ -5,7 +5,6 @@ import {
   Check,
   Timer,
   WavesArrowDown,
-  ListStart,
 } from "lucide-react";
 import { ScubaTank } from "./icons";
 import {
@@ -70,7 +69,7 @@ export default function CoursesBox({
               <li className="flex gap-2 text-xs items-center">
                 <PhilippinePeso />
                 <div>
-                  <h2 className="font-semibold flex gap-2">Price</h2>
+                  <h2 className="font-semibold flex gap-2">Starting Price</h2>
                   <p>{price}</p>
                 </div>
               </li>
